@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on My New Hugo Site</title>
+    <link>http://localhost:1313/categories/</link>
+    <description>Recent content in Categories on My New Hugo Site</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 12 Jul 2025 22:43:30 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go</title>
+      <link>http://localhost:1313/categories/go/</link>
+      <pubDate>Sat, 12 Jul 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/go/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>八股文</title>
+      <link>http://localhost:1313/categories/%E5%85%AB%E8%82%A1%E6%96%87/</link>
+      <pubDate>Sat, 12 Jul 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/%E5%85%AB%E8%82%A1%E6%96%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>A</title>
+      <link>http://localhost:1313/categories/a/</link>
+      <pubDate>Fri, 12 Jul 2019 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/categories/a/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

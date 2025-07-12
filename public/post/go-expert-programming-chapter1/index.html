@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='http://localhost:1313/js/theme-mode.js'></script>
+    <link rel="stylesheet" href="https://unpkg.com/@primer/css@^21.0.0/dist/primer.css">
+    <link rel="stylesheet" href='http://localhost:1313/css/frameworks.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github-style.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/light.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/dark.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/syntax.css' />
+    <title>Go 专家编程 - 第一章：常见数据结构实现原理 - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='/images/github-mark.png'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    <link rel="stylesheet" href="http://localhost:1313/css/frameworks.min.css"><link rel="stylesheet" href="http://localhost:1313/css/github.min.css"><link rel="stylesheet" href="http://localhost:1313/css/github-style.css"><link rel="stylesheet" href="http://localhost:1313/css/light.css"><link rel="stylesheet" href="http://localhost:1313/css/dark.css"><link rel="stylesheet" href="http://localhost:1313/css/syntax.css"><link rel="stylesheet" href="http://localhost:1313/css/custom-syntax.css"><link rel="stylesheet" href="http://localhost:1313/css/back-to-top.css"><link rel="stylesheet" href="http://localhost:1313/css/tabs.css"><link rel="stylesheet" href="http://localhost:1313/css/details.css"><link rel="stylesheet" href="http://localhost:1313/css/underline-nav-fix.css"><link rel="stylesheet" href="http://localhost:1313/css/toc.css">
+    <script type="text/javascript" src="http://localhost:1313/js/theme-mode.js"></script><script type="text/javascript" src="http://localhost:1313/js/copy-code.js"></script><script type="text/javascript" src="http://localhost:1313/js/back-to-top.js"></script><script type="text/javascript" src="http://localhost:1313/js/tabs.js"></script><script type="text/javascript" src="http://localhost:1313/js/details-sort.js"></script><script type="text/javascript" src="http://localhost:1313/js/toc.js"></script>
+
+    
+    
+
+
+<meta name="description"
+  content="本章主要介绍常见的数据结构，比如channel、slice、map等，通过对其底层实现原理的分析，来加深认识，以此避免一些使用过程中的误区。
+" />
+<meta name="keywords"
+  content='blog, hugo, programming' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="http://localhost:1313/post/go-expert-programming-chapter1/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Go 专家编程 - 第一章：常见数据结构实现原理 - My New Hugo Site" />
+<meta name="twitter:description"
+  content="本章主要介绍常见的数据结构，比如channel、slice、map等，通过对其底层实现原理的分析，来加深认识，以此避免一些使用过程中的误区。
+" />
+<meta name="twitter:site" content="http://localhost:1313/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="http://localhost:1313/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Go 专家编程 - 第一章：常见数据结构实现原理 - My New Hugo Site">
+<meta property="og:description"
+  content="本章主要介绍常见的数据结构，比如channel、slice、map等，通过对其底层实现原理的分析，来加深认识，以此避免一些使用过程中的误区。
+" />
+<meta property="og:url" content="http://localhost:1313/post/go-expert-programming-chapter1/" />
+<meta property="og:site_name" content="Go 专家编程 - 第一章：常见数据结构实现原理" />
+<meta property="og:image"
+  content="http://localhost:1313/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2020-02-01 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+        
+        delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '\\[', right: '\\]', display: true}
+        ],
+        
+        throwOnError: false,
+        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+        ignoredClasses: ['no-math'],
+        strict: false
+    });
+});
+</script>
+
+
+<style>
+.katex-display {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.katex {
+    font-size: 1.1em;
+}
+
+ 
+[data-color-mode="dark"] .katex {
+    color: var(--color-fg-default, #e6edf3);
+}
+
+ 
+.tab-content .katex-display {
+    margin: 1rem 0;
+}
+</style>
+
+
+
+
+</head>
+
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="http://localhost:1313/">
+        <img class="octicon" height="32" width="32" src="/images/github-mark-white.png">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" id="search-form" action="" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="http://localhost:1313/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="/images/github-mark-white.png">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+
+
+
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="http://localhost:1313/">
+                  <img class=" avatar-user"
+                    src="/images/avater_xiaomai_01.jpg"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="http://localhost:1313/">Griffin Chow</a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="http://localhost:1313/post/go-expert-programming-chapter1/">Go 专家编程 - 第一章：常见数据结构实现原理</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Sat, 01 Feb 2020 00:00:00 &#43;0000"
+                    class="no-wrap">
+                    Sat, 01 Feb 2020 00:00:00 &#43;0000</relative-time>
+
+                  
+                  <span class="file-info-divider"></span>
+                  Modified <relative-time datetime="Sat, 12 Jul 2025 00:18:00 &#43;0800"
+                    class="no-wrap">
+                    Sat, 12 Jul 2025 00:18:00 &#43;0800</relative-time>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <button id="toc-toggle" class="btn btn-octicon m-0 mr-2 p-2" type="button">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </button>
+                    
+                      1293 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                    
+                    <a class="muted-link mr-3" href="/tags/go">
+                      <svg class="octicon octicon-tag" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                        <path fill-rule="evenodd"
+                          d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z">
+                        </path>
+                      </svg>
+                      go
+                    </a>
+                    
+                    
+                  </div>
+                </div>
+              </div>
+
+              
+              <div class="SelectMenu" id="toc-details" style="display: none;">
+                <div class="SelectMenu-modal">
+                  <div class="SelectMenu-list" id="toc-list">
+                  </div>
+                </div>
+              </div>
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><p>本章主要介绍常见的数据结构，比如channel、slice、map等，通过对其底层实现原理的分析，来加深认识，以此避免一些使用过程中的误区。</p>
+<h1 id="章节链接">章节链接</h1>
+<ul>
+<li><a href="https://docs.kilvn.com/GoExpertProgramming/chapter01/1.1-chan.html">1.1 chan</a></li>
+<li><a href="https://docs.kilvn.com/GoExpertProgramming/chapter01/1.2-slice.html">1.2 slice</a></li>
+<li><a href="https://docs.kilvn.com/GoExpertProgramming/chapter01/1.3-map.html">1.3 map</a></li>
+<li><a href="https://docs.kilvn.com/GoExpertProgramming/chapter01/1.4-struct.html">1.4 struct</a></li>
+<li><a href="https://docs.kilvn.com/GoExpertProgramming/chapter01/1.5-iota.html">1.5 iota</a></li>
+<li><a href="https://docs.kilvn.com/GoExpertProgramming/chapter01/1.6-string.html">1.6 string</a></li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">hchan</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">qcount</span>   <span class="kt">uint</span>           <span class="c1">// 当前队列中剩余元素个数</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">dataqsiz</span> <span class="kt">uint</span>           <span class="c1">// 环形队列长度，即可以存放的元素个数</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">buf</span>      <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span> <span class="c1">// 环形队列指针</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">elemsize</span> <span class="kt">uint16</span>         <span class="c1">// 每个元素的大小</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">closed</span>   <span class="kt">uint32</span>            <span class="c1">// 标识关闭状态</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">elemtype</span> <span class="o">*</span><span class="nx">_type</span>         <span class="c1">// 元素类型</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">sendx</span>    <span class="kt">uint</span>           <span class="c1">// 队列下标，指示元素写入时存放到队列中的位置</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">recvx</span>    <span class="kt">uint</span>           <span class="c1">// 队列下标，指示元素从队列的该位置读出</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">recvq</span>    <span class="nx">waitq</span>          <span class="c1">// 等待读消息的goroutine队列</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">sendq</span>    <span class="nx">waitq</span>          <span class="c1">// 等待写消息的goroutine队列</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">lock</span> <span class="nx">mutex</span>              <span class="c1">// 互斥锁，chan不允许并发读写</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="go-语言关键字表格">Go 语言关键字表格</h2>
+<p>Go 语言总共有 25 个关键字，这些关键字不能用作标识符（变量名、函数名等）。</p>
+<table>
+  <thead>
+      <tr>
+          <th>关键字</th>
+          <th>分类</th>
+          <th>描述</th>
+          <th>示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>break</code></td>
+          <td>控制流</td>
+          <td>跳出循环或 switch 语句</td>
+          <td><code>break</code></td>
+      </tr>
+      <tr>
+          <td><code>case</code></td>
+          <td>控制流</td>
+          <td>switch 语句中的分支</td>
+          <td><code>case 1:</code></td>
+      </tr>
+      <tr>
+          <td><code>chan</code></td>
+          <td>类型</td>
+          <td>声明通道类型</td>
+          <td><code>chan int</code></td>
+      </tr>
+      <tr>
+          <td><code>const</code></td>
+          <td>声明</td>
+          <td>声明常量</td>
+          <td><code>const PI = 3.14</code></td>
+      </tr>
+      <tr>
+          <td><code>continue</code></td>
+          <td>控制流</td>
+          <td>跳过当前循环迭代</td>
+          <td><code>continue</code></td>
+      </tr>
+      <tr>
+          <td><code>default</code></td>
+          <td>控制流</td>
+          <td>switch 或 select 的默认分支</td>
+          <td><code>default:</code></td>
+      </tr>
+      <tr>
+          <td><code>defer</code></td>
+          <td>控制流</td>
+          <td>延迟执行函数</td>
+          <td><code>defer fmt.Println()</code></td>
+      </tr>
+      <tr>
+          <td><code>else</code></td>
+          <td>控制流</td>
+          <td>if 语句的否则分支</td>
+          <td><code>else { }</code></td>
+      </tr>
+      <tr>
+          <td><code>fallthrough</code></td>
+          <td>控制流</td>
+          <td>switch 中继续执行下一个 case</td>
+          <td><code>fallthrough</code></td>
+      </tr>
+      <tr>
+          <td><code>for</code></td>
+          <td>控制流</td>
+          <td>循环语句</td>
+          <td><code>for i := 0; i &lt; 10; i++</code></td>
+      </tr>
+      <tr>
+          <td><code>func</code></td>
+          <td>声明</td>
+          <td>声明函数</td>
+          <td><code>func main() { }</code></td>
+      </tr>
+      <tr>
+          <td><code>go</code></td>
+          <td>并发</td>
+          <td>启动 goroutine</td>
+          <td><code>go func() { }()</code></td>
+      </tr>
+      <tr>
+          <td><code>goto</code></td>
+          <td>控制流</td>
+          <td>无条件跳转</td>
+          <td><code>goto label</code></td>
+      </tr>
+      <tr>
+          <td><code>if</code></td>
+          <td>控制流</td>
+          <td>条件语句</td>
+          <td><code>if x &gt; 0 { }</code></td>
+      </tr>
+      <tr>
+          <td><code>import</code></td>
+          <td>声明</td>
+          <td>导入包</td>
+          <td><code>import &quot;fmt&quot;</code></td>
+      </tr>
+      <tr>
+          <td><code>interface</code></td>
+          <td>类型</td>
+          <td>声明接口类型</td>
+          <td><code>interface{}</code></td>
+      </tr>
+      <tr>
+          <td><code>map</code></td>
+          <td>类型</td>
+          <td>声明映射类型</td>
+          <td><code>map[string]int</code></td>
+      </tr>
+      <tr>
+          <td><code>package</code></td>
+          <td>声明</td>
+          <td>声明包名</td>
+          <td><code>package main</code></td>
+      </tr>
+      <tr>
+          <td><code>range</code></td>
+          <td>控制流</td>
+          <td>遍历数组、切片、映射等</td>
+          <td><code>for k, v := range m</code></td>
+      </tr>
+      <tr>
+          <td><code>return</code></td>
+          <td>控制流</td>
+          <td>函数返回</td>
+          <td><code>return value</code></td>
+      </tr>
+      <tr>
+          <td><code>select</code></td>
+          <td>并发</td>
+          <td>选择通道操作</td>
+          <td><code>select { case &lt;-ch: }</code></td>
+      </tr>
+      <tr>
+          <td><code>struct</code></td>
+          <td>类型</td>
+          <td>声明结构体类型</td>
+          <td><code>struct{ Name string }</code></td>
+      </tr>
+      <tr>
+          <td><code>switch</code></td>
+          <td>控制流</td>
+          <td>多分支选择语句</td>
+          <td><code>switch x { }</code></td>
+      </tr>
+      <tr>
+          <td><code>type</code></td>
+          <td>声明</td>
+          <td>类型定义或类型别名</td>
+          <td><code>type MyInt int</code></td>
+      </tr>
+      <tr>
+          <td><code>var</code></td>
+          <td>声明</td>
+          <td>声明变量</td>
+          <td><code>var x int</code></td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="使用注意事项">使用注意事项</h3>
+<ol>
+<li><strong>不能重定义</strong>：这些关键字不能用作变量名、函数名或任何标识符</li>
+<li><strong>大小写敏感</strong>：Go 语言区分大小写，<code>If</code> 不是关键字，但 <code>if</code> 是</li>
+<li><strong>版本稳定</strong>：从 Go 1.0 开始，这 25 个关键字就没有变化过</li>
+<li><strong>预留关键字</strong>：未来版本可能会添加新的关键字，建议避免使用可能成为关键字的标识符</li>
+</ol>
+<h3 id="常见错误示例">常见错误示例</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// ❌ 错误：使用关键字作为变量名</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="kd">func</span> <span class="p">=</span> <span class="s">&#34;hello&#34;</span>  <span class="c1">// 编译错误</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="kd">type</span> <span class="p">=</span> <span class="mi">42</span>       <span class="c1">// 编译错误</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ✅ 正确：使用合法的标识符</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">function</span> <span class="p">=</span> <span class="s">&#34;hello&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">dataType</span> <span class="p">=</span> <span class="mi">42</span>
+</span></span></code></pre></div>
+
+
+<details class="simple-details">
+  <summary class="simple-summary">
+    <span class="arrow">▶</span>
+    <span class="title">🤔 思考题：$O(n)$ <code>Channel</code> 的缓冲区满了会发生什么？</span>
+  </summary>
+  <div class="simple-content">
+    <p>当 Channel 的缓冲区满了，再次发送数据时：</p>
+<ol>
+<li><strong>发送的 goroutine 会被阻塞</strong> - 无法继续执行</li>
+<li><strong>加入到发送等待队列 (sendq)</strong> - 按 FIFO 顺序排队</li>
+<li><strong>等待接收操作</strong> - 直到有其他 goroutine 接收数据，释放缓冲区空间</li>
+<li><strong>被唤醒并完成发送</strong> - 数据发送完成后继续执行</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">// 缓冲区大小为 2</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span> <span class="c1">// OK</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span> <span class="c1">// OK</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">3</span> <span class="c1">// 阻塞！等待接收操作</span>
+</span></span></code></pre></div>
+  </div>
+</details>
+
+
+
+<details class="simple-details">
+  <summary class="simple-summary">
+    <span class="arrow">▶</span>
+    <span class="title">⚠️ 注意事项：避免 Channel 死锁</span>
+  </summary>
+  <div class="simple-content">
+    <p>使用 Channel 时需要特别注意避免死锁情况：</p>
+<p><strong>常见死锁场景：</strong></p>
+<ul>
+<li>在同一个 goroutine 中发送和接收无缓冲 channel</li>
+<li>所有 goroutine 都在等待接收，但没有发送者</li>
+<li>所有 goroutine 都在等待发送，但没有接收者</li>
+</ul>
+<p><strong>防止死锁的方法：</strong></p>
+<ul>
+<li>使用带缓冲的 channel</li>
+<li>使用 select 语句处理多个 channel 操作</li>
+<li>确保有对应的接收者或发送者</li>
+<li>及时关闭不再使用的 channel</li>
+</ul>
+
+  </div>
+</details>
+
+
+
+<details class="simple-details">
+  <summary class="simple-summary">
+    <span class="arrow">▶</span>
+    <span class="title">💡 最佳实践：Channel 使用模式</span>
+  </summary>
+  <div class="simple-content">
+    <p>推荐的 Channel 使用模式：</p>
+<ol>
+<li>
+<p><strong>传递数据所有权</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">worker</span><span class="p">(</span><span class="nx">jobs</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="nx">Job</span><span class="p">,</span> <span class="nx">results</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">Result</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="nx">job</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">jobs</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">results</span> <span class="o">&lt;-</span> <span class="nf">process</span><span class="p">(</span><span class="nx">job</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
+<li>
+<p><strong>信号通知</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 执行任务</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">done</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl"><span class="p">}()</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;-</span><span class="nx">done</span> <span class="c1">// 等待完成</span>
+</span></span></code></pre></div></li>
+<li>
+<p><strong>扇入扇出模式</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// 扇出：一个输入分发到多个 worker</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 扇入：多个结果合并到一个输出</span>
+</span></span></code></pre></div></li>
+</ol>
+
+  </div>
+</details>
+
+
+
+<details class="simple-details">
+  <summary class="simple-summary">
+    <span class="arrow">▶</span>
+    <span class="title">📚 补充资料：深入理解 Channel</span>
+  </summary>
+  <div class="simple-content">
+    <p>想要更深入地理解 Channel 的实现原理，可以参考以下资源：</p>
+<ul>
+<li><a href="https://golang.org/doc/effective_go.html#channels">Go 语言官方文档 - Channels</a></li>
+<li><a href="https://blog.golang.org/pipelines">Go 并发模式</a></li>
+<li><a href="https://github.com/golang/go/blob/master/src/runtime/chan.go">Channel 内部实现</a></li>
+</ul>
+<p><strong>相关概念：</strong></p>
+<ul>
+<li>CSP (Communicating Sequential Processes) 理论</li>
+<li>Goroutine 调度器</li>
+<li>内存模型和同步原语</li>
+</ul>
+
+  </div>
+</details></article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+  
+</div>
+
+  <div id="content">
+      
+  </div>
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="http://localhost:1313/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">
+        Copyright © 2019 - 2025 Griffin Chow </br>
+        Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a>
+      </li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="http://localhost:1313/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
+<script type="application/javascript" src='http://localhost:1313/js/search.js'></script>
+
+
+
+</html>

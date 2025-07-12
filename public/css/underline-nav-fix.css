@@ -1,0 +1,70 @@
+/* UnderlineNav 下边框平直化修复 + 去除间距和字体变化 */
+
+/* 去除 UnderlineNav-item 的下边框圆角，使其完全平直，并消除间距和字体变化 */
+.UnderlineNav-item {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-radius: 0 !important;
+  /* 去除间距变化 */
+  margin: 0 !important;
+  /* 防止字体变化导致的晃动 */
+  font-weight: 400 !important;
+  box-sizing: border-box !important;
+}
+
+/* 确保选中状态的 UnderlineNav-item 下边框也是平直的，无字体变化 */
+.UnderlineNav-item.selected,
+.UnderlineNav-item[aria-selected="true"] {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-radius: 0 !important;
+  /* 保持与默认状态相同的字体粗细，避免选中时变粗 */
+  font-weight: 400 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* hover 状态也保持平直，无字体变化 */
+.UnderlineNav-item:hover {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-radius: 0 !important;
+  /* hover 时保持相同的字体粗细和间距 */
+  font-weight: 400 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 确保 hx_UnderlineNav 类下的 UnderlineNav-item 也应用平直样式和一致间距字体 */
+.hx_UnderlineNav .UnderlineNav-item,
+.hx_UnderlineNav .UnderlineNav-item.selected,
+.hx_UnderlineNav .UnderlineNav-item[aria-selected="true"],
+.hx_UnderlineNav .UnderlineNav-item:hover {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-radius: 0 !important;
+  /* 统一字体粗细和间距 */
+  font-weight: 400 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 针对不同容器类的兼容性 */
+.hx_UnderlineNav .UnderlineNav-item,
+.hx_UnderlineNav .UnderlineNav-item.selected,
+.hx_UnderlineNav .UnderlineNav-item[aria-selected="true"],
+.hx_UnderlineNav .UnderlineNav-item:hover {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  font-weight: 400 !important;
+  margin: 0 !important;
+}
+
+/* 确保标签容器无间距 */
+.UnderlineNav {
+  gap: 0 !important;
+}
+
+.UnderlineNav .UnderlineNav-body {
+  gap: 0 !important;
+}

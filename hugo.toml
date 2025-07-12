@@ -1,0 +1,71 @@
+baseURL = 'https://griffinchow980.github.io/'
+languageCode = 'zh-cn'
+title = 'My New Hugo Site'
+# theme = "github-style" # 已移除主题
+
+pygmentsCodeFences = true
+pygmentsUseClasses = true
+
+[markup]
+  [markup.highlight]
+    style = "github"
+    lineNos = false
+    lineNumbersInTable = false
+    tabWidth = 4
+    codeFences = true
+    guessSyntax = true
+    noClasses = false
+  [markup.goldmark.renderer]
+    unsafe = true
+
+[params]
+  author = "Griffin Chow"
+  description = "My Hugo Blog"
+  github = "griffinchow980"
+  email = "griffinchow980@gmail.com"
+  url = "https://griffinchow980.github.io/"
+  keywords = "blog, hugo, programming"
+  rss = true
+  lastmod = true
+  favicon = "/images/github-mark.png"
+  avatar = "/images/avater_xiaomai_01.jpg"
+  headerIcon = "/images/github-mark-white.png"
+  location = "Earth"
+  userStatusEmoji = "😆"
+  enableGitalk = false
+  enableSearch = true
+  # 完整的样式文件配置
+  custom_css = [
+    "/css/frameworks.min.css",
+    "/css/github.min.css", 
+    "/css/github-style.css",
+    "/css/light.css",
+    "/css/dark.css",
+    "/css/syntax.css",
+    "/css/custom-syntax.css", 
+    "/css/back-to-top.css", 
+    "/css/tabs.css", 
+    "/css/details.css", 
+    "/css/underline-nav-fix.css",
+    "/css/toc.css"
+  ]
+  # 完整的脚本文件配置
+  custom_js = [
+    "/js/theme-mode.js",
+    "/js/copy-code.js", 
+    "/js/back-to-top.js", 
+    "/js/tabs.js", 
+    "/js/details-sort.js",
+    "/js/toc.js"
+  ]
+
+[outputs]
+  home = ["html", "json"]
+
+[outputFormats.json]
+  mediaType = "application/json"
+  baseName = "index"
+  isPlainText = false
+
+[frontmatter]
+  lastmod = ["lastmod", ":fileModTime", ":default"]

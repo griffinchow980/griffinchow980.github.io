@@ -1,0 +1,177 @@
+/* GitHub 风格代码块样式 */
+
+/* 代码块容器 */
+.highlight {
+  background-color: var(--color-canvas-subtle);
+  border-radius: 6px;
+  padding: 0;
+  margin: 16px 0;
+  overflow: hidden;
+  border: 0px solid var(--color-border-default);
+  position: relative;
+}
+
+/* 代码块头部 */
+.highlight::before {
+  content: "";
+  display: block;
+  height: 0;
+}
+
+/* 代码内容区域 */
+.highlight-content {
+  padding: 16px;
+  position: relative;
+}
+
+/* 复制按钮 */
+.copy-code-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--color-btn-bg);
+  border: 1px solid var(--color-btn-border);
+  border-radius: 6px;
+  color: var(--color-btn-text);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 1;
+}
+
+.copy-code-button:hover {
+  background: var(--color-btn-hover-bg);
+  border-color: var(--color-btn-hover-border);
+}
+
+.highlight:hover .copy-code-button {
+  opacity: 1;
+}
+
+/* 复制按钮图标 */
+.copy-code-button::before {
+  content: "📋";
+  margin-right: 4px;
+}
+
+.copy-code-button.copied::before {
+  content: "✓";
+}
+
+.copy-code-button.copied {
+  color: var(--color-success-fg);
+  border-color: var(--color-success-emphasis);
+}
+
+.highlight pre {
+  background-color: transparent !important;
+  margin: 0;
+  padding: 16px;
+  color: var(--color-fg-default);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow: auto;
+}
+
+/* 行内代码 */
+code {
+  background-color: var(--color-neutral-muted);
+  color: var(--color-fg-default);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+}
+
+/* 代码块内的代码不受行内代码样式影响 */
+.highlight code {
+  background-color: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* 语法高亮颜色 - 亮色主题 */
+[data-color-mode="light"] .highlight .k,
+[data-color-mode="light"] .highlight .kd,
+[data-color-mode="light"] .highlight .kr {
+  color: #d73a49; /* 关键字 - 红色 */
+}
+
+[data-color-mode="light"] .highlight .s,
+[data-color-mode="light"] .highlight .s1,
+[data-color-mode="light"] .highlight .s2,
+[data-color-mode="light"] .highlight .se {
+  color: #032f62; /* 字符串 - 深蓝色 */
+}
+
+[data-color-mode="light"] .highlight .c,
+[data-color-mode="light"] .highlight .c1,
+[data-color-mode="light"] .highlight .cm {
+  color: #6a737d; /* 注释 - 灰色 */
+}
+
+[data-color-mode="light"] .highlight .nf {
+  color: #6f42c1; /* 函数名 - 紫色 */
+}
+
+[data-color-mode="light"] .highlight .kt,
+[data-color-mode="light"] .highlight .nb {
+  color: #005cc5; /* 类型 - 蓝色 */
+}
+
+[data-color-mode="light"] .highlight .m,
+[data-color-mode="light"] .highlight .mi,
+[data-color-mode="light"] .highlight .mf {
+  color: #005cc5; /* 数字 - 蓝色 */
+}
+
+/* 语法高亮颜色 - 暗色主题 */
+[data-color-mode="dark"] .highlight .k,
+[data-color-mode="dark"] .highlight .kd,
+[data-color-mode="dark"] .highlight .kr {
+  color: #ff7b72; /* 关键字 - 浅红色 */
+}
+
+[data-color-mode="dark"] .highlight .s,
+[data-color-mode="dark"] .highlight .s1,
+[data-color-mode="dark"] .highlight .s2,
+[data-color-mode="dark"] .highlight .se {
+  color: #a5d6ff; /* 字符串 - 浅蓝色 */
+}
+
+[data-color-mode="dark"] .highlight .c,
+[data-color-mode="dark"] .highlight .c1,
+[data-color-mode="dark"] .highlight .cm {
+  color: #8b949e; /* 注释 - 灰色 */
+}
+
+[data-color-mode="dark"] .highlight .nf {
+  color: #d2a8ff; /* 函数名 - 浅紫色 */
+}
+
+[data-color-mode="dark"] .highlight .kt,
+[data-color-mode="dark"] .highlight .nb {
+  color: #79c0ff; /* 类型 - 浅蓝色 */
+}
+
+[data-color-mode="dark"] .highlight .m,
+[data-color-mode="dark"] .highlight .mi,
+[data-color-mode="dark"] .highlight .mf {
+  color: #79c0ff; /* 数字 - 浅蓝色 */
+}
+
+/* 通用样式 */
+.highlight .o {
+  color: var(--color-fg-default); /* 操作符 */
+}
+
+.highlight .p {
+  color: var(--color-fg-default); /* 标点 */
+}
+
+.highlight .n {
+  color: var(--color-fg-default); /* 变量名 */
+}

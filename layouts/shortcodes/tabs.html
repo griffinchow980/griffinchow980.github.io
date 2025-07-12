@@ -1,0 +1,24 @@
+{{/*
+  Tabs Shortcode for Hugo - 工作版本
+  Usage: {{< tabs "tab1,tab2,tab3" >}}Content for tab1|||Content for tab2|||Content for tab3{{< /tabs >}}
+*/}}
+
+{{- $tabsId := printf "tabs-%d" (now.UnixNano) -}}
+{{- $inner := .Inner -}}
+{{- $tabNames := split (.Get 0) "," -}}
+{{- $tabContents := split $inner "|||" -}}
+
+<div class="tabs-container" id="{{ $tabsId }}">
+  <div class="tabs">
+    {{- range $i, $name := $tabNames -}}
+      <button class="tab{{ if eq $i 0 }} active{{ end }}" data-tab="{{ $tabsId }}-tab{{ $i }}">
+        {{- $name | strings.TrimSpace -}}
+      </button>
+    {{- end -}}
+  </div>
+  {{- range $i, $content := $tabContents -}}
+    <div class="tab-content{{ if eq $i 0 }} active{{ end }}" id="{{ $tabsId }}-tab{{ $i }}">
+      {{- $content | strings.TrimSpace | $.Page.RenderString -}}
+    </div>
+  {{- end -}}
+</div>
