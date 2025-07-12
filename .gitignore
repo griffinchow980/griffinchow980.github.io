@@ -1,5 +1,5 @@
-# 创建 .gitignore
-echo "# Hugo 构建输出
+cat > .gitignore << 'EOF'
+# Hugo 构建输出
 public/
 resources/
 
@@ -29,4 +29,5 @@ Thumbs.db
 
 # 备份文件
 *.bak
-*copy/" > .gitignore
+*copy/
+EOF
