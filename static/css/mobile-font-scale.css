@@ -26,7 +26,7 @@
   .post-avatar,
   .shortcode-media img,
   .shortcode-img {
-    max-width: 90vw;
+    /* max-width: 90vw; */
     height: auto;
     display: block;
     margin: 0.5em auto;
@@ -48,7 +48,7 @@
   .details-content object,
   .post-content object,
   .shortcode-media object {
-    max-width: 90vw;
+    /* max-width: 90vw; */
     height: auto;
     display: block;
     margin: 0.5em auto;
