@@ -47,7 +47,8 @@ pygmentsUseClasses = true
     "/css/tabs.css", 
     "/css/details.css", 
     "/css/underline-nav-fix.css",
-    "/css/toc.css"
+    "/css/toc.css",
+    "/css/mobile-font-scale.css"
   ]
   # 完整的脚本文件配置
   custom_js = [
@@ -55,7 +56,7 @@ pygmentsUseClasses = true
     "/js/copy-code.js", 
     "/js/back-to-top.js", 
     "/js/tabs.js", 
-    "/js/details-sort.js",
+    # "/js/details-sort.js",
     "/js/toc.js"
   ]
 
