@@ -174,10 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const allSelected = selectedCategories.includes('all');
 
     // Get all top-level details
-    const allDetails = getTopDetails();
+      const allDetails = getTopDetails();
 
     // Show/hide details based on selected categories
-    allDetails.forEach(d => {
+      allDetails.forEach(d => {
       const detailCategory = d.dataset.category;
       const shouldShow = allSelected || selectedCategories.includes(detailCategory);
       
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // show 2 per cat for selected categories only
       Object.entries(map).forEach(([cat, list]) => {
         if (allSelected || selectedCategories.includes(cat)) {
-          shuffle(list).slice(0, 2).forEach(d => (d.style.display = 'block'));
+        shuffle(list).slice(0, 2).forEach(d => (d.style.display = 'block'));
         }
       });
       
