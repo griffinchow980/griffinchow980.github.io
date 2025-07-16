@@ -1,0 +1,75 @@
+{{ define "main" }}
+<div class="container-xl px-3 px-md-4 px-lg-5" style="margin-top: 20px;">
+    <!-- <div class="mb-3">
+        <a href="/" class="btn btn-sm btn-outline">← Home</a>
+    </div> -->
+    <div class="Box md-order-2 mb-3" style="position:sticky;top:0px;z-index:2;">
+        <div class="Box-header d-flex flex-items-center flex-justify-between" style="padding: 12px 16px !important">
+            <div class="d-flex flex-items-center">
+                <!-- <h2 class="Box-title" style="font-size: 16px !important;font-weight: 400 !important;">
+                    Categories
+                </h2> -->
+                <a href="/" class="btn btn-sm btn-outline">
+                    <svg class="octicon octicon-home" height="16" viewBox="0 0 16 16" width="16" aria-hidden="true" style="vertical-align:text-bottom;">
+                      <path fill-rule="evenodd" d="M8.065.21a.75.75 0 00-.53.22L1.28 6.685a.75.75 0 101.06 1.06L2.75 7.335V14h3.5v-4.5h3.5V14h3.5V7.335l.41.41a.75.75 0 101.06-1.06L8.595.43a.75.75 0 00-.53-.22z"></path>
+                    </svg>
+                    Home
+                </a>
+            </div>
+            <div>
+                <button id="shuffle-button" class="btn btn-sm btn-primary">
+                  <svg class="octicon" height="16" width="16" viewBox="0 0 16 16" aria-hidden="true" style="vertical-align:text-bottom;">
+                    <path fill-rule="evenodd" d="M11.03 2.97a.75.75 0 10-1.06 1.06L12.56 6.56H4.75a.75.75 0 000 1.5h7.81l-2.53 2.53a.75.75 0 001.06 1.06l3.97-3.97a.75.75 0 000-1.06l-3.97-3.97zM4.97 13.03a.75.75 0 101.06-1.06L3.44 9.44h7.81a.75.75 0 000-1.5H3.44l2.59-2.59A.75.75 0 104.97 4.28L1 8.25a.75.75 0 000 1.06l3.97 3.97z"/>
+                  </svg>
+                  Shuffle
+                </button>
+                <button id="test-button" class="btn btn-sm btn-primary">
+                  <svg class="octicon" height="16" width="16" viewBox="0 0 16 16" aria-hidden="true" style="vertical-align:text-bottom;">
+                    <path fill-rule="evenodd" d="M2.75 1.5a.75.75 0 000 1.5h.286l.53 3.186a1.5 1.5 0 01-.262 1.058L1.582 9.7A3 3 0 004.036 14h7.928a3 3 0 002.454-4.3l-1.722-2.456a1.5 1.5 0 01-.262-1.058l.53-3.186h.286a.75.75 0 000-1.5H2.75zm3.426 4.5l-.46-2.75h4.568l-.46 2.75a3 3 0 00.525 2.116L13.08 10.5a1.5 1.5 0 01-1.218 2.25H4.137a1.5 1.5 0 01-1.218-2.25l1.23-1.834a3 3 0 00.527-2.116z"/>
+                  </svg>
+                  Test
+                </button>
+                <button id="reset-button" class="btn btn-sm btn-secondary">
+                  <svg class="octicon" height="16" width="16" viewBox="0 0 16 16" aria-hidden="true" style="vertical-align:text-bottom;">
+                    <path fill-rule="evenodd" d="M1.705 3.255a.75.75 0 011.06.05A6.5 6.5 0 118 14.5a.75.75 0 010-1.5a5 5 0 10-3.665-8.5l1.2 1.2a.75.75 0 01-1.06 1.06L1.77 4.085a.75.75 0 01-.065-1.06z"/>
+                  </svg>
+                  Reset
+                </button>
+            </div>
+        </div>
+        <div class="border-bottom">
+            <div class="Box-body">
+                <div class="d-flex flex-wrap" style="gap: 8px;">
+                    <!-- Category filters -->
+                    <div class="category-filter">
+                        <input type="checkbox" id="cat-all" class="category-checkbox" data-category="all" checked>
+                        <label for="cat-all" class="btn btn-sm">All</label>
+                    </div>
+                    
+                    {{ $allInterviewPages := where .Site.RegularPages "Section" "interviews" }}
+                    {{ range $allInterviewPages }}
+                    {{ $categoryId := printf "cat-%s" (.Title | urlize) }}
+                    <div class="category-filter">
+                        <input type="checkbox" id="{{ $categoryId }}" class="category-checkbox" data-category="{{ .Title | urlize }}">
+                        <label for="{{ $categoryId }}" class="btn btn-sm">{{ .Title }}</label>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="interview-details">
+        {{ $pages := .Paginate (where .Site.RegularPages "Section" "interviews") 10000 }}
+        {{ range $pages.Pages }}
+            <div class="interview-file-content" data-category="{{ .Title | urlize }}">
+                {{ .Content }}
+            </div>
+        {{ end }}
+    </div>
+    {{ if gt .Paginator.TotalPages 1 }}
+    <div class="paginate-container">
+        {{ partial "pagination.html" . }}
+    </div>
+    {{ end }}
+</div>
+{{ end }} 

@@ -77,6 +77,11 @@
   background: var(--color-canvas-default, #ffffff);
 }
 
+.simple-content ul,
+.simple-content ol {
+    padding-left: 20px;
+}
+
 /* 内容中第一个元素的上边距 */
 .simple-content > *:first-child {
   margin-top: 0;

@@ -15,7 +15,7 @@
   .tag,
   .timestamp,
   .search-input {
-    font-size: 90% !important;
+    font-size: 95% !important;
   }
 
   /* 图片和媒体最大宽度限制，保持原始比例 */
@@ -72,7 +72,7 @@
   .tag,
   .timestamp,
   .search-input {
-    font-size: 80% !important;
+    font-size: 90% !important;
   }
 
   .markdown-body img,
@@ -127,7 +127,7 @@
   .tag,
   .timestamp,
   .search-input {
-    font-size: 70% !important;
+    font-size: 80% !important;
   }
 
   .markdown-body img,

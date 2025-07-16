@@ -52,3 +52,81 @@
 <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
 <script type="application/javascript" src='{{ "js/search.js" | absURL }}'></script>
 {{ end }}
+
+<!-- Load interviews.js on interviews pages -->
+{{ if eq .Section "interviews" }}
+<script type="application/javascript" src='{{ "js/interviews.js" | absURL }}'></script>
+{{ end }}
+
+<!-- 确保interviews.js在所有页面中都正确加载 -->
+<script>
+// 直接计算interviews数量并更新计数器
+(function() {
+  // 立即执行的函数，确保变量不会污染全局作用域
+  function updateInterviewsCounter() {
+    // 获取所有计数器元素
+    const counters = document.querySelectorAll('.interviews-counter');
+    if (counters.length === 0) return; // 如果没有计数器，直接返回
+    
+    // 如果当前页面是interviews页面
+    if (window.location.pathname.includes('/interviews/')) {
+      // 等待DOM完全加载后计算
+      setTimeout(function() {
+        const container = document.getElementById('interview-details');
+        if (container) {
+          // 获取顶层details数量
+          const detailsCount = Array.from(container.children)
+            .filter(el => el.tagName && el.tagName.toLowerCase() === 'details')
+            .length;
+          
+          // 更新所有计数器
+          counters.forEach(counter => {
+            counter.textContent = detailsCount;
+          });
+        }
+      }, 500);
+    } else {
+      // 非interviews页面，通过AJAX获取数量
+      fetch('/interviews/')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.text();
+        })
+        .then(html => {
+          // 创建一个临时的DOM元素来解析HTML
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          
+          // 查找所有details元素
+          const detailsElements = tempDiv.querySelectorAll('.simple-details');
+          const detailsCount = detailsElements.length;
+          
+          // 更新所有计数器
+          counters.forEach(counter => {
+            counter.textContent = detailsCount;
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching interviews:', error);
+          // 发生错误时，显示一个默认值
+          counters.forEach(counter => {
+            counter.textContent = '?';
+          });
+        });
+    }
+  }
+  
+  // 页面加载完成后执行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateInterviewsCounter);
+  } else {
+    // 如果DOMContentLoaded已经触发，直接执行
+    updateInterviewsCounter();
+  }
+  
+  // 确保在window完全加载后再次尝试
+  window.addEventListener('load', updateInterviewsCounter);
+})();
+</script>

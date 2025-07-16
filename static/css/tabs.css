@@ -27,7 +27,7 @@
 
 /* Tab 按钮 - MkDocs Material 风格：仅下划线高亮，无其他边框，无点击高亮 */
 .tab {
-  padding: 8px 12px 12px 12px;
+  padding: 6px 10px 10px 10px;
   cursor: pointer;
   border: none;
   outline: none;

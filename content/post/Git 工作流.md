@@ -1,6 +1,6 @@
 ---
 title: "Git 工作流全面解析"
-date: 2025-07-13T10:00:00+08:00
+date: 2019-09-23
 categories: ["版本控制"]
 tags: ["git", "工作流"]
 draft: false
@@ -55,7 +55,7 @@ feature             release
 **常用 Git 命令：**
 
 新建功能分支并开发：
-```shell
+```bash
 git checkout develop
 git checkout -b feature/awesome-feature
 # 开发并提交
@@ -67,7 +67,7 @@ git branch -d feature/awesome-feature
 ```
 
 准备发布：
-```shell
+```bash
 git checkout develop
 git checkout -b release/v1.0.0
 # 修复bug、准备发布
@@ -82,7 +82,7 @@ git branch -d release/v1.0.0
 ```
 
 紧急修复：
-```shell
+```bash
 git checkout master
 git checkout -b hotfix/urgent-fix
 # 修复并提交
@@ -121,7 +121,7 @@ main
 **流程步骤与操作：**
 
 新建功能分支并开发：
-```shell
+```bash
 git checkout main
 git checkout -b feature/short-desc
 # 开发并提交
@@ -131,7 +131,7 @@ git push origin feature/short-desc
 ```
 
 发起 Pull Request，代码评审、自动测试通过后合并到 main：
-```shell
+```bash
 # 在 GitHub 网页发起 PR，合并后本地同步
 git checkout main
 git pull origin main
@@ -170,7 +170,7 @@ release
 **典型流程与操作：**
 
 开发分支：
-```shell
+```bash
 git checkout main
 git checkout -b feature/new-feature
 # 开发并提交
@@ -184,7 +184,7 @@ git branch -d feature/new-feature
 ```
 
 发布到预生产环境：
-```shell
+```bash
 git checkout pre-production
 git merge main
 # 测试通过后

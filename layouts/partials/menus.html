@@ -29,6 +29,11 @@
               Posts
               <span class="Counter">{{ $section_count}}</span>
             </a>
+            <a class="UnderlineNav-item {{ if eq .Type "interviews" }} selected {{ end }}" href="{{ .Site.BaseURL }}interviews/">
+              <svg class="octicon octicon-code UnderlineNav-octicon hide-sm" height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M4.72 3.22a.75.75 0 011.06 1.06L2.06 8l3.72 3.72a.75.75 0 11-1.06 1.06L.47 8.53a.75.75 0 010-1.06l4.25-4.25zm6.56 0a.75.75 0 00-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 001.06 1.06l4.25-4.25a.75.75 0 000-1.06L11.28 3.22z"></path></svg>
+              Interviews
+              <span class="Counter interviews-counter"></span>
+            </a>
           </nav>
           <div class="profile-color-modes js-promo-color-modes-banner-profile isInitialToggle">
             <svg width="106" height="60" viewBox="0 0 106 60" fill="none" stroke-width="3" stroke-linecap="round"
