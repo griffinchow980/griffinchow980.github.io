@@ -46,6 +46,9 @@
 <link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" />
 {{ end }}
 
+<!-- Admonition CSS -->
+<link rel="stylesheet" href='{{ "css/admonitions.css" | absURL }}' />
+
 <!-- JSON Feed -->
 {{ with .OutputFormats.Get "json" }}
 <link href="{{ .RelPermalink }}" rel="alternate" type="application/json" title="{{ $.Site.Title }}" />
@@ -95,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
 }
 
 .katex {
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
 /* 适配暗色主题 */
@@ -108,6 +111,8 @@ document.addEventListener("DOMContentLoaded", function() {
     margin: 1rem 0;
 }
 </style>
+
+
 {{ end }}
 
 

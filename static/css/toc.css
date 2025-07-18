@@ -139,3 +139,4 @@ div.SelectMenu#toc-details .SelectMenu-list::-webkit-scrollbar-thumb:hover {
 [data-color-mode="dark"] .toc-item:hover {
     background-color: var(--color-action-list-item-default-hover-bg);
 }
+

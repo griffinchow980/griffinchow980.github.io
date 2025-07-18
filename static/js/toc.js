@@ -1,7 +1,6 @@
 /**
  * TOC (Table of Contents) 目录功能
  * 精简版，完全兼容 github-style 主题
- * 版本: v3 - 强制缓存刷新
  */
 (function() {
     'use strict';
@@ -155,8 +154,13 @@
             
             link.className = 'toc-item';
             link.href = `#${heading.id}`;
-            link.textContent = heading.textContent;
-            
+            // link.textContent = heading.textContent;
+            // 清空链接内容，然后逐一克隆并添加标题的所有子节点
+            link.innerHTML = '';
+            Array.from(heading.childNodes).forEach(node => {
+                link.appendChild(node.cloneNode(true));
+            });
+
             // 根据标题级别设置缩进
             link.style.paddingLeft = `${8 + (level - 1) * 12}px`;
             

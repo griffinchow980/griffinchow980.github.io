@@ -5,7 +5,7 @@
   background-color: var(--color-canvas-subtle);
   border-radius: 6px;
   padding: 0;
-  margin: 16px 0;
+  margin: 1rem 0;
   overflow: hidden;
   border: 0px solid var(--color-border-default);
   position: relative;
@@ -34,8 +34,13 @@
   border-radius: 6px;
   color: var(--color-btn-text);
   cursor: pointer;
-  font-size: 12px;
-  padding: 4px 8px;
+  font-size: 12px; /* 保留字体大小以确保按钮高度 */
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
   transition: opacity 0.2s;
   z-index: 1;
@@ -50,15 +55,15 @@
   opacity: 1;
 }
 
-/* 复制按钮图标 */
+/* 复制按钮图标
 .copy-code-button::before {
-  content: "📋";
+  content: "📄";
   margin-right: 4px;
 }
 
 .copy-code-button.copied::before {
-  content: "✓";
-}
+  content: "✅";
+} */
 
 .copy-code-button.copied {
   color: var(--color-success-fg);
@@ -80,7 +85,7 @@
 code {
   background-color: var(--color-neutral-muted);
   color: var(--color-fg-default);
-  padding: 2px 4px;
+  padding: 1.5px 3px;
   border-radius: 3px;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 12px;

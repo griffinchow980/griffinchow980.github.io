@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
       'subgraph' // Subgraph (for nested graphs)
     ];
 
+    // 定义复制按钮的图标
+    const ICON_COPY = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path></svg>`;
+    const ICON_COPIED = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg>`;
+
     highlights.forEach(function(highlight) {
         // 如果 highlight 内部有 .mermaid 元素，跳过
         if (highlight.querySelector('.mermaid')) {
@@ -56,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 只为真正的代码块添加复制按钮
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-code-button';
-        copyButton.textContent = 'Copy';
+        copyButton.innerHTML = ICON_COPY;
         copyButton.setAttribute('aria-label', '复制代码');
         highlight.appendChild(copyButton);
 
@@ -65,10 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const code = codeElement ? codeElement.textContent : highlight.textContent;
 
             navigator.clipboard.writeText(code).then(function() {
-                copyButton.textContent = 'Copied!';
+                copyButton.innerHTML = ICON_COPIED;
                 copyButton.classList.add('copied');
                 setTimeout(function() {
-                    copyButton.textContent = 'Copy';
+                    copyButton.innerHTML = ICON_COPY;
                     copyButton.classList.remove('copied');
                 }, 2000);
             }).catch(function(err) {
@@ -78,10 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    copyButton.textContent = 'Copied!';
+                    copyButton.innerHTML = ICON_COPIED;
                     copyButton.classList.add('copied');
                     setTimeout(function() {
-                        copyButton.textContent = 'Copy';
+                        copyButton.innerHTML = ICON_COPY;
                         copyButton.classList.remove('copied');
                     }, 2000);
                 } catch (err) {

@@ -6,6 +6,7 @@ tags: ["git", "工作流"]
 draft: false
 description: "介绍主流 Git 工作流，包括 Git flow、Github flow、Gitlab flow，并对比其适用场景和操作流程。"
 summary: "介绍主流 Git 工作流，包括 Git flow、Github flow、Gitlab flow，并对比其适用场景和操作流程。"
+
 ---
 
 
@@ -14,6 +15,147 @@ summary: "介绍主流 Git 工作流，包括 Git flow、Github flow、Gitlab fl
 本文参考 [hifreud](https://www.hifreud.com/2019/02/25/git-workflow/) 和 [阮一峰](https://www.ruanyifeng.com/blog/2015/12/git-workflow.html) 的内容，系统梳理主流的 Git 工作流方案，帮助你选择最适合团队协作和项目管理的版本控制流程。
 
 ---
+
+<!-- 1. Note -->
+{{< admonition type="note" title="泰勒展开 $e^{x} = \sum\limits_{n=0}^{\infty}\dfrac{x^{n}}{n!}$" collapse="true" >}}
+这里是 **Note** 内容：
+1. 支持 _Markdown_ 渲染  
+2. 内联代码 `printf("Hello");`  
+3. 复杂公式（居中） 
+<div> 
+\[
+\int_{0}^{\pi}\sin x \, dx = 2
+\]
+</div>
+{{< /admonition >}}
+
+<!-- 2. Abstract -->
+{{< admonition type="abstract" title="`O(⋅)` 表示复杂度 (\\(n \\to \\infty\\))" collapse="true" >}}
+- 适合写摘要  
+- 爱因斯坦质能方程： 
+  <div> 
+  \[
+  E = mc^{2}
+  \]
+  </div>
+- 引用嵌套短代码：  
+  {{< admonition type="abstract" title="`O(⋅)` 表示复杂度 (\\(n \\to \\infty\\))" collapse="true" >}}
+  - 适合写摘要  
+  - 爱因斯坦质能方程： 
+    <div> 
+    \[
+    E = mc^{2}
+    \]
+    </div>
+  {{< /admonition >}}
+{{< /admonition >}}
+
+<!-- 3. Info -->
+{{< admonition type="info" title="📦 Go Modules `go.mod` 结构" collapse="true" >}}
+
+```go
+module example.com/m
+go 1.22
+require (
+    github.com/sirupsen/logrus v1.9.3
+)
+```  
+{{< /admonition >}}
+
+<!-- 4. Tip -->
+{{< admonition type="tip" title="行列式 $\det(A)=\prod \lambda_i$" collapse="true" >}}
+> 小贴士：可用 `\text{}` 在公式中插入普通文本。  
+> 例： \\(f(x)=\sin x, \text{其中 } x \in \mathbb{R}\\)
+{{< /admonition >}}
+
+<!-- 5. Success -->
+{{< admonition type="success" title="测试通过 `100%`" collapse="true" >}}
+- **恭喜！** 所有单元测试与集成测试均已通过  
+- 运行时间：`42ms`
+{{< /admonition >}}
+
+<!-- 6. Warning -->
+{{< admonition type="warning" title="注意 $Δt \\to 0$ 时的数值误差" collapse="true" >}}
+- Euler 显式法在刚性问题上会 **发散**  
+- 建议使用 RK4 或隐式方法
+{{< /admonition >}}
+
+<!-- 7. Failure -->
+{{< admonition type="failure" title="构建失败 `exit code 1`" collapse="true" >}}
+```bash
+$ go build ./...
+main.go:15:2: cannot find package "github.com/xxx/yyy"
+```
+{{< /admonition >}}
+
+<!-- 8. Bug -->
+{{< admonition type="bug" title="NullPointerException at `line 128`" collapse="true" >}}
+堆栈信息：
+```bash
+java.lang.NullPointerException
+at com.example.Service.process(Service.java:128)
+```
+复现步骤：
+1. 登录  
+2. 点击 **导出**  
+3. 程序崩溃
+{{< /admonition >}}
+
+<!-- 9. Example -->
+{{< admonition type="example" title="FFT 样例：$N=8$ 点离散信号" collapse="true" >}}
+<div>
+\[
+X_k = \sum_{n=0}^{N-1} x_n e^{-j 2\pi kn/N}
+\]  
+</div>
+下表给出时域与频域对照：  
+
+| $n$ | $x_n$ |
+|---|---------|
+| 0 | 1 |
+| 1 | 0 |
+| … | … |
+{{< /admonition >}}
+
+<!-- 10. Quote -->
+{{< admonition type="quote" title="“Stay hungry, stay foolish” — Steve Jobs" collapse="true" >}}
+> 这句话源于 1974 年的《Whole Earth Catalog》最后一期封底  
+> “保持求知若渴，保持谦逊若愚”
+{{< /admonition >}}
+
+<div>
+$$
+\begin{align*}
+\frac{d}{dt}
+\begin{bmatrix} x_1(t) \\ x_2(t) \end{bmatrix}
+&=
+\underbrace{
+  \begin{bmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{bmatrix}
+}_{\mathbf{A}}
+\begin{bmatrix} x_1(t) \\ x_2(t) \end{bmatrix}
++
+\underbrace{
+  \begin{bmatrix} b_1 \\ b_2 \end{bmatrix}
+}_{\mathbf{B}}
+u(t)
+\\
+\\
+y(t)
+&=
+\underbrace{
+  \begin{bmatrix} c_1 & c_2 \end{bmatrix}
+}_{\mathbf{C}}
+\begin{bmatrix} x_1(t) \\ x_2(t) \end{bmatrix}
++
+\underbrace{
+  \begin{bmatrix} d \end{bmatrix}
+}_{\mathbf{D}}
+u(t)
+\end{align*}
+$$
+</div>
+
+
 
 ## 为什么需要工作流？
 
@@ -25,6 +167,11 @@ summary: "介绍主流 Git 工作流，包括 Git flow、Github flow、Gitlab fl
 ---
 
 ## 主流 Git 工作流对比
+
+合理的工作流可以：
+- 明确分支职责，减少冲突
+- 规范开发、测试、发布流程
+- 提高协作效率和代码质量
 
 {{< tabs "Git flow,Github flow,Gitlab flow" >}}
 

@@ -4,14 +4,21 @@ date: 2025-07-16T10:00:00+08:00
 draft: false
 ---
 
-{{< details "如何在有序数组中实现二分查找？请给出多语言实现，并说明时间复杂度$ O(\log n) $" >}}
+{{< details "如何在有序数组中实现二分查找？请给出多语言实现，并说明时间复杂度 `func main()` $ D(x) = \begin{cases} 1, & \text{if } x \in \mathbb{Q} \\\\\\\\ 0, & \text{if } x \notin \mathbb{Q} \end{cases} $" >}}
 二分查找（Binary Search）利用元素有序的特性，每次将搜索区间折半，直到找到目标或区间为空。
 
 {{< details "如何在有序数组中实现二分查找？请给出多语言实现，并说明时间复杂度$ O(\log n) $" >}}
-- 输入：有序数组 `nums` 及目标值 `target`
-- 输出：目标值在数组中的索引，若不存在则返回 `-1`
-- 时间复杂度：$ O(\log n) $
-- 空间复杂度：$ O(1) $
+<div>
+$$
+\begin{align*}
+f(x) &= \frac{a_0}{2} + \sum_{n=1}^{\infty} \left( a_n \cos\left(\frac{2\pi n x}{L}\right) + b_n \sin\left(\frac{2\pi n x}{L}\right) \right) \\
+\\
+\text{其中系数为:} \\
+a_n &= \frac{2}{L} \int_{0}^{L} f(x) \cos\left(\frac{2\pi n x}{L}\right) dx, \quad n \ge 0 \\
+b_n &= \frac{2}{L} \int_{0}^{L} f(x) \sin\left(\frac{2\pi n x}{L}\right) dx, \quad n \ge 1
+\end{align*}
+$$
+</div>
 {{< /details >}}
 
 - 输入：有序数组 `nums` 及目标值 `target`
