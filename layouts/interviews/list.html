@@ -1,14 +1,8 @@
 {{ define "main" }}
 <div class="container-xl px-3 px-md-4 px-lg-5" style="margin-top: 20px;">
-    <!-- <div class="mb-3">
-        <a href="/" class="btn btn-sm btn-outline">← Home</a>
-    </div> -->
     <div class="Box md-order-2 mb-3" style="position:sticky;top:0px;z-index:2;">
         <div class="Box-header d-flex flex-items-center flex-justify-between" style="padding: 12px 16px !important">
             <div class="d-flex flex-items-center">
-                <!-- <h2 class="Box-title" style="font-size: 16px !important;font-weight: 400 !important;">
-                    Categories
-                </h2> -->
                 <a href="/" class="btn btn-sm btn-outline">
                     <svg class="octicon octicon-home" height="16" viewBox="0 0 16 16" width="16" aria-hidden="true" style="vertical-align:text-bottom;">
                       <path fill-rule="evenodd" d="M8.065.21a.75.75 0 00-.53.22L1.28 6.685a.75.75 0 101.06 1.06L2.75 7.335V14h3.5v-4.5h3.5V14h3.5V7.335l.41.41a.75.75 0 101.06-1.06L8.595.43a.75.75 0 00-.53-.22z"></path>
@@ -39,21 +33,29 @@
         </div>
         <div class="border-bottom">
             <div class="Box-body">
-                <div class="d-flex flex-wrap" style="gap: 8px;">
-                    <!-- Category filters -->
-                    <div class="category-filter">
-                        <input type="checkbox" id="cat-all" class="category-checkbox" data-category="all" checked>
-                        <label for="cat-all" class="btn btn-sm">All</label>
+                <div class="filters-row d-flex" style="gap: 16px;">
+                    <!-- Category Dropdown -->
+                    <div class="dropdown-container">
+                        <label for="category-dropdown" class="dropdown-label">Categories:</label>
+                        <div class="dropdown-select">
+                            <select id="category-dropdown" class="dropdown-select-element" multiple>
+                                {{ $allInterviewPages := where .Site.RegularPages "Section" "interviews" }}
+                                {{ range $allInterviewPages }}
+                                <option value="{{ .Title | urlize }}">{{ .Title }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
                     </div>
                     
-                    {{ $allInterviewPages := where .Site.RegularPages "Section" "interviews" }}
-                    {{ range $allInterviewPages }}
-                    {{ $categoryId := printf "cat-%s" (.Title | urlize) }}
-                    <div class="category-filter">
-                        <input type="checkbox" id="{{ $categoryId }}" class="category-checkbox" data-category="{{ .Title | urlize }}">
-                        <label for="{{ $categoryId }}" class="btn btn-sm">{{ .Title }}</label>
+                    <!-- Tags Dropdown -->
+                    <div class="dropdown-container">
+                        <label for="tags-dropdown" class="dropdown-label">Tags:</label>
+                        <div class="dropdown-select">
+                            <select id="tags-dropdown" class="dropdown-select-element" multiple>
+                                <!-- 所有标签会通过JavaScript动态加载 -->
+                            </select>
+                        </div>
                     </div>
-                    {{ end }}
                 </div>
             </div>
         </div>
@@ -72,4 +74,389 @@
     </div>
     {{ end }}
 </div>
+
+<!-- 直接引入interviews.js脚本 -->
+<script src="{{ "js/interviews.js" | absURL }}"></script>
+
+<!-- 内联脚本直接初始化Select2和筛选功能 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM content loaded, initializing interviews functionality');
+    
+    // 确保jQuery已加载
+    if (typeof jQuery === 'undefined') {
+        console.error('jQuery not loaded!');
+        loadScript('https://code.jquery.com/jquery-3.6.4.min.js', initializeInterviews);
+    } else {
+        console.log('jQuery already loaded');
+        
+        // 确保Select2已加载
+        if (typeof jQuery.fn.select2 === 'undefined') {
+            console.error('Select2 not loaded!');
+            loadScript('https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', initializeInterviews);
+        } else {
+            console.log('Select2 already loaded');
+            initializeInterviews();
+        }
+    }
+    
+    function loadScript(url, callback) {
+        console.log('Loading script:', url);
+        var script = document.createElement('script');
+        script.src = url;
+        script.onload = callback;
+        document.head.appendChild(script);
+    }
+    
+    function initializeInterviews() {
+        console.log('Initializing interviews functionality');
+        
+        // 初始化Select2
+        try {
+            jQuery('#category-dropdown').select2({
+                placeholder: "选择或搜索分类...",
+                allowClear: true,
+                closeOnSelect: false,
+                width: '100%'
+            });
+            
+            jQuery('#tags-dropdown').select2({
+                placeholder: "选择或搜索标签...",
+                allowClear: true,
+                closeOnSelect: false,
+                width: '100%'
+            });
+            console.log('Select2 initialized');
+
+            // 绑定筛选事件（包括 select2 专用事件）
+            jQuery('#category-dropdown').on('change select2:select select2:unselect', () => {
+                updateVisibility();
+            });
+            jQuery('#tags-dropdown').on('change select2:select select2:unselect', () => {
+                updateVisibility();
+            });
+        } catch (e) {
+            console.error('Error initializing Select2:', e);
+        }
+        
+        const container = document.getElementById('interview-details');
+        if (!container) {
+            console.error('Container #interview-details not found');
+            return;
+        }
+        
+        const categoryDropdown = document.getElementById('category-dropdown');
+        const tagsDropdown = document.getElementById('tags-dropdown');
+        const shuffleBtn = document.getElementById('shuffle-button');
+        const testBtn = document.getElementById('test-button');
+        const resetBtn = document.getElementById('reset-button');
+        
+        console.log('Found elements:', 
+            categoryDropdown ? 'Category dropdown ✓' : 'Category dropdown ✗',
+            tagsDropdown ? 'Tags dropdown ✓' : 'Tags dropdown ✗',
+            shuffleBtn ? 'Shuffle button ✓' : 'Shuffle button ✗',
+            testBtn ? 'Test button ✓' : 'Test button ✗',
+            resetBtn ? 'Reset button ✓' : 'Reset button ✗'
+        );
+        
+        // 处理文件内容和details
+        const fileBlocks = Array.from(container.querySelectorAll('.interview-file-content'));
+        console.log(`Found ${fileBlocks.length} file blocks to process`);
+        
+        fileBlocks.forEach(block => {
+            const cat = block.dataset.category;
+            // 只选择一级details（不选择嵌套在另一个details中的）
+            const detailsEls = Array.from(block.querySelectorAll('details')).filter(d => !d.parentElement.closest('details'));
+            console.log(`Processing category ${cat}: ${detailsEls.length} details elements`);
+            
+            detailsEls.forEach(d => {
+                d.dataset.category = cat;
+                container.appendChild(d); // 移到根级别
+            });
+            block.remove();
+        });
+        
+        // 原始顺序
+        const originalOrder = Array.from(container.children).filter(el => el.tagName && el.tagName.toLowerCase() === 'details');
+        console.log(`Total details elements after processing: ${originalOrder.length}`);
+        
+        // 收集所有标签
+        function collectAllTags() {
+            const allTags = new Set();
+            const details = Array.from(container.children).filter(el => el.tagName && el.tagName.toLowerCase() === 'details');
+            
+            details.forEach(detail => {
+                const tagAttr = detail.getAttribute('data-tags');
+                if (tagAttr) {
+                    const tags = tagAttr.split(',').map(tag => tag.trim());
+                    tags.forEach(tag => {
+                        if (tag) allTags.add(tag);
+                    });
+                }
+            });
+            
+            return Array.from(allTags).sort();
+        }
+        
+        // 初始化标签下拉框
+        function initTagsDropdown() {
+            const allTags = collectAllTags();
+            console.log(`Found ${allTags.length} unique tags`);
+            
+            if (tagsDropdown) {
+                // 清空现有选项（除了"All"）
+                while (tagsDropdown.options.length > 1) {
+                    tagsDropdown.remove(0);
+                }
+                
+                // 添加所有标签作为选项
+                allTags.forEach(tag => {
+                    const option = document.createElement('option');
+                    option.value = tag;
+                    option.textContent = tag;
+                    tagsDropdown.appendChild(option);
+                });
+                
+                // 刷新Select2
+                try {
+                    jQuery(tagsDropdown).trigger('change');
+                } catch (e) {
+                    console.error('Error triggering change on tags dropdown:', e);
+                }
+            }
+        }
+        
+        // 在页面加载后初始化标签下拉框
+        initTagsDropdown();
+        
+        // 更新可见性
+        function updateVisibility() {
+            // 获取选中的分类
+            const selectedCategories = categoryDropdown ? (jQuery(categoryDropdown).val() || []) : [];
+            const allCategoriesSelected = selectedCategories.length === 0; // 空选表示全部
+            
+            // 获取选中的标签
+            const selectedTags = tagsDropdown ? (jQuery(tagsDropdown).val() || []) : [];
+            const allTagsSelected = selectedTags.length === 0; // 空选表示全部
+
+            console.log("Selected categories:", selectedCategories, "All selected:", allCategoriesSelected);
+            console.log("Selected tags:", selectedTags, "All tags selected:", allTagsSelected);
+        
+            // 获取所有顶层details元素
+            const allDetails = Array.from(container.children).filter(el => el.tagName && el.tagName.toLowerCase() === 'details');
+        
+            // 根据选中的分类和标签显示/隐藏details
+            allDetails.forEach(detail => {
+                const detailCategory = detail.dataset.category;
+                const detailTags = detail.dataset.tags ? detail.dataset.tags.split(',').map(tag => tag.trim()) : [];
+                
+                // 检查分类是否匹配
+                const categoryMatch = allCategoriesSelected || selectedCategories.includes(detailCategory);
+                
+                // 检查标签是否匹配（如果选择了标签且details有标签）
+                let tagMatch = allTagsSelected;
+                
+                if (!allTagsSelected && detailTags.length > 0) {
+                    // 只要有一个标签匹配就显示
+                    tagMatch = selectedTags.some(tag => detailTags.includes(tag));
+                }
+                
+                // 只有当分类和标签都匹配时才显示
+                detail.style.display = (categoryMatch && tagMatch) ? 'block' : 'none';
+            });
+            
+            // 更新计数器
+            document.querySelectorAll('.interviews-counter').forEach(counter => {
+                const visibleCount = Array.from(container.children)
+                    .filter(el => el.tagName && el.tagName.toLowerCase() === 'details' && el.style.display !== 'none')
+                    .length;
+                counter.textContent = visibleCount;
+            });
+        }
+        
+        // 下拉框事件处理
+        // 仍然添加原生 change 监听（确保非 Select2 场景也能工作）
+        if (categoryDropdown) {
+            categoryDropdown.addEventListener('change', () => updateVisibility());
+        }
+        if (tagsDropdown) {
+            tagsDropdown.addEventListener('change', () => updateVisibility());
+        }
+        
+        // 初始筛选
+        updateVisibility();
+        
+        // Shuffle按钮功能
+        if (shuffleBtn) {
+            shuffleBtn.addEventListener('click', () => {
+                console.log('Shuffle button clicked');
+                const visibleDetails = Array.from(container.children)
+                    .filter(el => el.tagName && el.tagName.toLowerCase() === 'details' && el.style.display !== 'none');
+                
+                // Fisher-Yates 洗牌算法
+                for (let i = visibleDetails.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [visibleDetails[i], visibleDetails[j]] = [visibleDetails[j], visibleDetails[i]];
+                }
+                
+                visibleDetails.forEach(d => container.appendChild(d));
+            });
+        }
+        
+        // Test按钮功能
+        if (testBtn) {
+            testBtn.addEventListener('click', () => {
+                console.log('Test button clicked');
+                // 获取选中的分类
+                const selectedCategories = categoryDropdown ? (jQuery(categoryDropdown).val() || []) : [];
+                const allCategoriesSelected = selectedCategories.length === 0;
+                
+                // 获取选中的标签
+                const selectedTags = tagsDropdown ? (jQuery(tagsDropdown).val() || []) : [];
+                const allTagsSelected = selectedTags.length === 0;
+
+                // 获取符合当前筛选条件的details
+                const visible = Array.from(container.children)
+                    .filter(el => {
+                        if (!el.tagName || el.tagName.toLowerCase() !== 'details') return false;
+                        
+                        const detailCategory = el.dataset.category;
+                        const detailTags = el.dataset.tags ? el.dataset.tags.split(',').map(tag => tag.trim()) : [];
+                        
+                        // 检查分类是否匹配
+                        const categoryMatch = allCategoriesSelected || selectedCategories.includes(detailCategory);
+                        
+                        // 检查标签是否匹配
+                        let tagMatch = allTagsSelected;
+                        if (!allTagsSelected && detailTags.length > 0) {
+                            tagMatch = selectedTags.some(tag => detailTags.includes(tag));
+                        }
+                        
+                        return categoryMatch && tagMatch;
+                    });
+
+                const map = {};
+                visible.forEach(d => {
+                    const cat = d.dataset.category;
+                    (map[cat] = map[cat] || []).push(d);
+                });
+                
+                // 隐藏所有details
+                Array.from(container.children)
+                    .filter(el => el.tagName && el.tagName.toLowerCase() === 'details')
+                    .forEach(d => (d.style.display = 'none'));
+                
+                // 每个分类显示2个
+                Object.entries(map).forEach(([cat, list]) => {
+                    if (allCategoriesSelected || selectedCategories.includes(cat)) {
+                        // Fisher-Yates 洗牌算法
+                        for (let i = list.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [list[i], list[j]] = [list[j], list[i]];
+                        }
+                        
+                        list.slice(0, 2).forEach(d => (d.style.display = 'block'));
+                    }
+                });
+                
+                // 更新计数器
+                document.querySelectorAll('.interviews-counter').forEach(counter => {
+                    const visibleCount = Array.from(container.children)
+                        .filter(el => el.tagName && el.tagName.toLowerCase() === 'details' && el.style.display !== 'none')
+                        .length;
+                    counter.textContent = visibleCount;
+                });
+            });
+        }
+        
+        // Reset按钮功能
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                console.log('Reset button clicked');
+                // 重置分类下拉框 - 只选择"All"
+                if (categoryDropdown) {
+                    Array.from(categoryDropdown.options).forEach(opt => {
+                        opt.selected = false;
+                    });
+                    
+                    // 刷新Select2
+                    try {
+                        jQuery(categoryDropdown).val(null).trigger('change');
+                    } catch (e) {
+                        console.error('Error triggering change.select2 on category dropdown:', e);
+                    }
+                }
+                
+                // 重置标签下拉框 - 只选择"All"
+                if (tagsDropdown) {
+                    Array.from(tagsDropdown.options).forEach(opt => {
+                        opt.selected = false;
+                    });
+                    
+                    // 刷新Select2
+                    try {
+                        jQuery(tagsDropdown).val(null).trigger('change');
+                    } catch (e) {
+                        console.error('Error triggering change.select2 on tags dropdown:', e);
+                    }
+                }
+                
+                // 显示所有details
+                Array.from(container.children)
+                    .filter(el => el.tagName && el.tagName.toLowerCase() === 'details')
+                    .forEach(d => (d.style.display = 'block'));
+                
+                // 恢复原始DOM顺序
+                originalOrder.forEach(d => container.appendChild(d));
+                
+                // 更新计数器
+                document.querySelectorAll('.interviews-counter').forEach(counter => {
+                    const visibleCount = Array.from(container.children)
+                        .filter(el => el.tagName && el.tagName.toLowerCase() === 'details' && el.style.display !== 'none')
+                        .length;
+                    counter.textContent = visibleCount;
+                });
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        
+        // 处理箭头旋转
+        function setupArrowRotation() {
+            // 找到所有details元素
+            const allDetails = document.querySelectorAll('#interview-details details');
+            
+            // 为每个details添加toggle事件监听器
+            allDetails.forEach(function(details) {
+                // 获取箭头元素（直接子元素的summary中的arrow）
+                const arrow = details.querySelector(':scope > summary > .arrow');
+                if (!arrow) return;
+                
+                // 初始化箭头状态
+                if (details.open) {
+                    arrow.style.transform = 'rotate(90deg)';
+                    arrow.style.transition = 'transform 0.3s';
+                } else {
+                    arrow.style.transform = 'rotate(0deg)';
+                    arrow.style.transition = 'transform 0.3s';
+                }
+                
+                // 添加toggle事件监听器
+                details.addEventListener('toggle', function() {
+                    if (this.open) {
+                        arrow.style.transform = 'rotate(90deg)';
+                        arrow.style.transition = 'transform 0.3s';
+                    } else {
+                        arrow.style.transform = 'rotate(0deg)';
+                        arrow.style.transition = 'transform 0.3s';
+                    }
+                });
+            });
+        }
+        
+        // 执行箭头旋转设置
+        setupArrowRotation();
+    }
+});
+</script>
 {{ end }} 

@@ -20,7 +20,9 @@ details.admonition summary {
 }
 
 /* 当详情展开时，去除下方圆角以与内容衔接 */
-details.admonition[open] summary {
+
+/* 仅对当前（直接子级）summary 取消下圆角，避免父级影响子级 */
+details.admonition[open] > summary {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -45,23 +47,26 @@ details.admonition[open] summary {
 .admonition-arrow svg { color: inherit; }
 
 /* 为箭头应用同样的颜色映射 */
-.admonition-note .admonition-arrow svg,
-.admonition-abstract .admonition-arrow svg,
-.admonition-info .admonition-arrow svg { color: var(--color-accent-fg); }
+/* 仅作用于本级 summary 内的箭头，避免父级影响子级 */
+.admonition-note > summary .admonition-arrow svg,
+.admonition-abstract > summary .admonition-arrow svg,
+.admonition-info > summary .admonition-arrow svg { color: var(--color-accent-fg); }
 
-.admonition-tip .admonition-arrow svg,
-.admonition-success .admonition-arrow svg { color: var(--color-success-fg); }
+.admonition-tip > summary .admonition-arrow svg,
+.admonition-success > summary .admonition-arrow svg { color: var(--color-success-fg); }
 
-.admonition-warning .admonition-arrow svg { color: var(--color-attention-fg); }
+.admonition-warning > summary .admonition-arrow svg { color: var(--color-attention-fg); }
 
-.admonition-failure .admonition-arrow svg,
-.admonition-bug .admonition-arrow svg { color: var(--color-danger-fg); }
+.admonition-failure > summary .admonition-arrow svg,
+.admonition-bug > summary .admonition-arrow svg { color: var(--color-danger-fg); }
 
-.admonition-example .admonition-arrow svg,
-.admonition-quote .admonition-arrow svg { color: var(--color-fg-muted); }
+.admonition-example > summary .admonition-arrow svg,
+.admonition-quote > summary .admonition-arrow svg { color: var(--color-fg-muted); }
 
 /* 旋转 */
-details[open] .admonition-arrow svg {
+
+/* 仅旋转当前 open details 的箭头，防止祖先 open 影响嵌套 */
+details.admonition[open] > summary .admonition-arrow svg {
   transform: rotate(90deg);
 }
 
@@ -76,7 +81,13 @@ details.admonition.static summary {
 
 .admonition-content {
   padding: 10px;
+  /* 6px垂直内边距，减少底部空间 */
   color: var(--color-fg-default);
+}
+
+/* 更强匹配：去除最后元素的外边距，防止底部留白 */
+.admonition-content *:last-child {
+  margin-bottom: 0 !important;
 }
 
 /* Color variants */
@@ -87,9 +98,9 @@ details.admonition.static summary {
   border-color: var(--color-accent-fg);
 }
 
-.admonition-note summary,
-.admonition-abstract summary,
-.admonition-info summary {
+.admonition-note > summary,
+.admonition-abstract > summary,
+.admonition-info > summary {
   color: var(--color-accent-fg);
   background-color: var(--color-accent-subtle);
 }
@@ -100,8 +111,8 @@ details.admonition.static summary {
   border-color: var(--color-success-fg);
 }
 
-.admonition-tip summary,
-.admonition-success summary {
+.admonition-tip > summary,
+.admonition-success > summary {
   color: var(--color-success-fg);
   background-color: var(--color-success-subtle);
 }
@@ -111,7 +122,7 @@ details.admonition.static summary {
   border-color: var(--color-attention-fg);
 }
 
-.admonition-warning summary {
+.admonition-warning > summary {
   color: var(--color-attention-fg);
   background-color: var(--color-attention-subtle);
 }
@@ -122,8 +133,8 @@ details.admonition.static summary {
   border-color: var(--color-danger-fg);
 }
 
-.admonition-failure summary,
-.admonition-bug summary {
+.admonition-failure > summary,
+.admonition-bug > summary {
   color: var(--color-danger-fg);
   background-color: var(--color-danger-subtle);
 }
@@ -134,8 +145,8 @@ details.admonition.static summary {
   border-color: var(--color-fg-muted);
 }
 
-.admonition-example summary,
-.admonition-quote summary {
+.admonition-example > summary,
+.admonition-quote > summary {
   color: var(--color-fg-muted);
   background-color: var(--color-neutral-subtle);
 }

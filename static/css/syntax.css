@@ -71,8 +71,8 @@ code .s {
 code {
   background-color: var(--color-neutral-muted);
   color: var(--color-fg-default);
-  padding: 2px 4px;
-  border-radius: 3px;
+  padding: 1.5px 3px;
+  border-radius: 1.5px;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
 

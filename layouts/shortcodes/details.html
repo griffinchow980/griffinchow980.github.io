@@ -1,11 +1,13 @@
 {{/*
-  简洁 Details 短代码 - 支持 Markdown 标题
+  简洁 Details 短代码 - 支持 Markdown 标题和标签
   ！！！注意：此短代码不能用 markdown 标题，否则会被 TOC 解析为标题。
-  用法：{{< details "**标题** 支持 `markdown`" >}}内容{{< /details >}}
+  用法：{{< details "**标题** 支持 `markdown`" "tag1,tag2,tag3" >}}内容{{< /details >}}
+  或者：{{< details "**标题** 支持 `markdown`" >}}内容{{< /details >}}
 */}}
 {{ $title := .Get 0 | default "详细信息" }}
+{{ $tags := .Get 1 | default "" }}
 
-<details class="simple-details">
+<details class="simple-details"{{ with $tags }} data-tags="{{ . }}"{{ end }}>
   <summary class="simple-summary">
     <span class="arrow">▶</span>
     <span class="title">{{ $title | markdownify | safeHTML }}</span>
