@@ -1,7 +1,8 @@
 /* Interviews page width alignment: make filters and details the same width */
 #interviews-filters,
 #interview-details {
-    max-width: var(--interviews-content-width, 1024px);
+    /* 与详情区域保持同样的内容宽度（默认 980px，可通过 --interviews-content-width 覆盖）*/
+    max-width: var(--interviews-content-width, 978px);
     margin-left: auto;
     margin-right: auto;
 }
@@ -9,11 +10,17 @@
 /* 让 filters 视觉宽度与下面每个 details（simple-details: margin 2px）一致 */
 /* #interviews-filters {
     box-sizing: border-box;
-    padding-left: 2px;
-    padding-right: 2px;
+    padding-left: -1px;
+    padding-right: -1px;
 } */
 
-@media (max-width: 1024px) {
+/* 覆盖 Primer Box 的内边距：让筛选区内容与 details 对齐（simple-details 左右各 2px 外边距）*/
+/* #interviews-filters .Box-body {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+} */
+
+@media (max-width: 1012px) {
     #interviews-filters,
     #interview-details {
         max-width: 100%;
