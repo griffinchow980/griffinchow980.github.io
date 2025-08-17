@@ -1,0 +1,166 @@
+/* 平板端 (768px - 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  html, body,
+  h1, h2, h3, h4, h5, h6,
+  .markdown-body,
+  .btn, .button,
+  .Header-link,
+  .octicon, .icon, svg, .shortcode-icon,
+  .details summary,
+  .details-content,
+  .sidebar,
+  .post-meta,
+  .breadcrumb,
+  .pagination,
+  .tag,
+  .timestamp,
+  .search-input {
+    font-size: 100% !important;
+  }
+
+  /* 图片和媒体最大宽度限制，保持原始比例 */
+  .markdown-body img,
+  .details-content img,
+  .post-content img,
+  .avatar,
+  .post-avatar,
+  .shortcode-media img,
+  .shortcode-img {
+    /* max-width: 90vw; */
+    height: auto;
+    display: block;
+    margin: 0.5em auto;
+  }
+  /* 视频、iframe等媒体最大宽度限制 */
+  .markdown-body video,
+  .details-content video,
+  .post-content video,
+  .shortcode-media video,
+  .markdown-body iframe,
+  .details-content iframe,
+  .post-content iframe,
+  .shortcode-media iframe,
+  .markdown-body embed,
+  .details-content embed,
+  .post-content embed,
+  .shortcode-media embed,
+  .markdown-body object,
+  .details-content object,
+  .post-content object,
+  .shortcode-media object {
+    /* max-width: 90vw; */
+    height: auto;
+    display: block;
+    margin: 0.5em auto;
+  }
+}
+
+/* 手机端 (最大 767px) */
+@media screen and (max-width: 767px) {
+  html, body,
+  h1, h2, h3, h4, h5, h6,
+  .markdown-body,
+  .btn, .button,
+  .Header-link,
+  .octicon, .icon, svg, .shortcode-icon,
+  .details summary,
+  .details-content,
+  .sidebar,
+  .post-meta,
+  .breadcrumb,
+  .pagination,
+  .tag,
+  .timestamp,
+  .search-input {
+    font-size: 98% !important;
+  }
+
+  .markdown-body img,
+  .details-content img,
+  .post-content img,
+  .avatar,
+  .post-avatar,
+  .shortcode-media img,
+  .shortcode-img {
+    max-width: 90vw;
+    height: auto;
+    display: block;
+    margin: 0.5em auto;
+  }
+  .markdown-body video,
+  .details-content video,
+  .post-content video,
+  .shortcode-media video,
+  .markdown-body iframe,
+  .details-content iframe,
+  .post-content iframe,
+  .shortcode-media iframe,
+  .markdown-body embed,
+  .details-content embed,
+  .post-content embed,
+  .shortcode-media embed,
+  .markdown-body object,
+  .details-content object,
+  .post-content object,
+  .shortcode-media object {
+    max-width: 70vw;
+    height: auto;
+    display: block;
+    margin: 0.5em auto;
+  }
+}
+
+/* 超小屏幕 (最大 480px) */
+@media screen and (max-width: 480px) {
+  html, body,
+  h1, h2, h3, h4, h5, h6,
+  .markdown-body,
+  .btn, .button,
+  .Header-link,
+  .octicon, .icon, svg, .shortcode-icon,
+  .details summary,
+  .details-content,
+  .sidebar,
+  .post-meta,
+  .breadcrumb,
+  .pagination,
+  .tag,
+  .timestamp,
+  .search-input {
+    font-size: 96% !important;
+  }
+
+  .markdown-body img,
+  .details-content img,
+  .post-content img,
+  .avatar,
+  .post-avatar,
+  .shortcode-media img,
+  .shortcode-img {
+    max-width: 80vw;
+    height: auto;
+    display: block;
+    margin: 0.5em auto;
+  }
+  .markdown-body video,
+  .details-content video,
+  .post-content video,
+  .shortcode-media video,
+  .markdown-body iframe,
+  .details-content iframe,
+  .post-content iframe,
+  .shortcode-media iframe,
+  .markdown-body embed,
+  .details-content embed,
+  .post-content embed,
+  .shortcode-media embed,
+  .markdown-body object,
+  .details-content object,
+  .post-content object,
+  .shortcode-media object {
+    max-width: 60vw;
+    height: auto;
+    display: block;
+    margin: 0.5em auto;
+  }
+}

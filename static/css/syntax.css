@@ -1,0 +1,83 @@
+/* 代码块容器样式 - 跟随主题切换 */
+.highlight {
+  background-color: var(--color-canvas-subtle);
+  border-radius: 6px;
+  padding: 16px;
+  margin: 16px 0;
+  overflow: auto;
+}
+
+.highlight pre {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  color: var(--color-fg-default);
+}
+
+/* 明暗主题通用的语法高亮 */
+code .k {
+  color: var(--color-prettylights-syntax-keyword);
+}
+
+code .nf {
+  color: var(--color-prettylights-syntax-entity);
+}
+
+code .o {
+  color: var(--color-prettylights-syntax-constant);
+}
+
+code .bp {
+  color: var(--color-prettylights-syntax-constant);
+}
+
+code .ow {
+  color: var(--color-prettylights-syntax-constant);
+}
+
+code .s2 {
+  color: var(--color-prettylights-syntax-string);
+}
+
+code .nb {
+  color: var(--color-prettylights-syntax-entity);
+}
+
+code .kn {
+  color: var(--color-prettylights-syntax-keyword);
+}
+
+code .nc {
+  color: var(--color-prettylights-syntax-variable);
+}
+
+code .c1 {
+  color: var(--color-prettylights-syntax-comment);
+}
+
+code .kr {
+  color: var(--color-prettylights-syntax-keyword);
+}
+
+code .s1 {
+  color: var(--color-prettylights-syntax-string);
+}
+
+code .s {
+  color: var(--color-prettylights-syntax-string);
+}
+
+/* 行内代码样式 */
+code {
+  background-color: var(--color-neutral-muted);
+  color: var(--color-fg-default);
+  padding: 1.5px 3px;
+  border-radius: 1.5px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* 确保代码块内的代码不受行内代码样式影响 */
+.highlight code {
+  background-color: transparent;
+  padding: 0;
+}

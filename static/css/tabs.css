@@ -1,0 +1,180 @@
+/* Tabs 分页组件 - MkDocs Material 风格 */
+
+/* 基础容器 - 完全无边框和背景 */
+.tabs-container {
+  margin: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Tab 导航栏 - 极简设计，仅下边框分割线 */
+.tabs {
+  display: flex;
+  border: none;
+  border-bottom: 1px solid var(--color-border-muted, #d1d9e0);
+  background: transparent;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE */
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Tab 按钮 - MkDocs Material 风格：仅下划线高亮，无其他边框，无点击高亮 */
+.tab {
+  padding: 8px 10px 10px 10px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-fg-muted, #656d76);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-bottom-color 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  margin: 0;
+  border-radius: 0;
+  text-decoration: none;
+  /* 防止字体变化导致的晃动 */
+  box-sizing: border-box;
+}
+
+.tab:hover {
+  color: var(--color-fg-default, #24292f);
+  background-color: transparent;
+  border-bottom-color: var(--color-border-default, #d0d7de);
+}
+
+.tab.active {
+  color: var(--color-accent-fg, #0969da);
+  border-bottom-color: var(--color-accent-emphasis, #0969da);
+  background-color: transparent;
+  font-weight: 400; /* 保持和默认状态相同的字体粗细 */
+}
+
+/* 移除焦点高亮效果 */
+.tab:focus {
+  outline: none;
+}
+
+/* Tab 内容区域 - 与普通内容完全一致，无额外样式 */
+.tab-content {
+  display: none;
+  padding: 0;
+  background: transparent;
+  margin-top: 6px;
+  border: none;
+  box-shadow: none;
+  animation: fadeIn 0.15s ease-in-out;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* 内容样式 - 继承主题原有样式，不添加额外修饰 */
+.tab-content h1, .tab-content h2, .tab-content h3, 
+.tab-content h4, .tab-content h5, .tab-content h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.tab-content h1:first-child, .tab-content h2:first-child, 
+.tab-content h3:first-child, .tab-content h4:first-child, 
+.tab-content h5:first-child, .tab-content h6:first-child {
+  margin-top: 0;
+}
+
+.tab-content p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.tab-content ul, .tab-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.tab-content blockquote {
+  margin: 1rem 0;
+  padding: 0 1rem;
+  border-left: 4px solid var(--color-border-default, #d0d7de);
+}
+
+/* 代码块样式 - 继承主题样式，减少边距 */
+.tab-content pre {
+  margin: 0.5rem 0;
+}
+
+.tab-content .highlight {
+  margin: 0.5rem 0;
+}
+
+.tab-content .highlight pre {
+  margin: 0;
+}
+
+/* 暗色主题适配 */
+[data-color-mode="dark"] .tabs {
+  border-bottom-color: var(--color-border-muted, #30363d);
+}
+
+[data-color-mode="dark"] .tab {
+  color: var(--color-fg-muted, #7d8590);
+}
+
+[data-color-mode="dark"] .tab:hover {
+  color: var(--color-fg-default, #e6edf3);
+  border-bottom-color: var(--color-border-default, #30363d);
+}
+
+[data-color-mode="dark"] .tab.active {
+  color: var(--color-accent-fg, #2f81f7);
+  border-bottom-color: var(--color-accent-emphasis, #2f81f7);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .tabs {
+    overflow-x: auto;
+  }
+  
+  .tab {
+    padding: 8px 10px 10px 10px;
+    font-size: 13px;
+    min-width: 60px;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(4px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+/* 确保不影响主题原有样式 */
+.tabs-container * {
+  box-sizing: border-box;
+}
+
+.tabs-container .tab-content > *:first-child {
+  margin-top: 0;
+}
+
+.tabs-container .tab-content > *:last-child {
+  margin-bottom: 0;
+}

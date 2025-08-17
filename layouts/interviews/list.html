@@ -1,0 +1,90 @@
+{{ define "main" }}
+<div class="container-xl px-3 px-md-4 px-lg-5" style="margin-top: 20px;">
+    <div id="interviews-filters" class="Box md-order-2 mb-3" style="position:sticky;top:0px;z-index:2;" data-enhanced="0">
+        <div class="Box-header d-flex flex-items-center flex-justify-between" style="padding: 12px 16px !important">
+            <div class="d-flex flex-items-center">
+                <a href="/" class="btn btn-sm btn-outline">
+                    <svg class="octicon octicon-home" height="16" viewBox="0 0 16 16" width="16" aria-hidden="true" style="vertical-align:text-bottom;">
+                      <path fill-rule="evenodd" d="M8.065.21a.75.75 0 00-.53.22L1.28 6.685a.75.75 0 101.06 1.06L2.75 7.335V14h3.5v-4.5h3.5V14h3.5V7.335l.41.41a.75.75 0 101.06-1.06L8.595.43a.75.75 0 00-.53-.22z"></path>
+                    </svg>
+                    Home
+                </a>
+            </div>
+            <div>
+                <button id="shuffle-button" class="btn btn-sm btn-primary">
+                  <svg class="octicon" height="16" width="16" viewBox="0 0 16 16" aria-hidden="true" style="vertical-align:text-bottom;">
+                    <path fill-rule="evenodd" d="M11.03 2.97a.75.75 0 10-1.06 1.06L12.56 6.56H4.75a.75.75 0 000 1.5h7.81l-2.53 2.53a.75.75 0 001.06 1.06l3.97-3.97a.75.75 0 000-1.06l-3.97-3.97zM4.97 13.03a.75.75 0 101.06-1.06L3.44 9.44h7.81a.75.75 0 000-1.5H3.44l2.59-2.59A.75.75 0 104.97 4.28L1 8.25a.75.75 0 000 1.06l3.97 3.97z"/>
+                  </svg>
+                  Shuffle
+                </button>
+                <button id="test-button" class="btn btn-sm btn-primary">
+                  <svg class="octicon" height="16" width="16" viewBox="0 0 16 16" aria-hidden="true" style="vertical-align:text-bottom;">
+                    <path fill-rule="evenodd" d="M2.75 1.5a.75.75 0 000 1.5h.286l.53 3.186a1.5 1.5 0 01-.262 1.058L1.582 9.7A3 3 0 004.036 14h7.928a3 3 0 002.454-4.3l-1.722-2.456a1.5 1.5 0 01-.262-1.058l.53-3.186h.286a.75.75 0 000-1.5H2.75zm3.426 4.5l-.46-2.75h4.568l-.46 2.75a3 3 0 00.525 2.116L13.08 10.5a1.5 1.5 0 01-1.218 2.25H4.137a1.5 1.5 0 01-1.218-2.25l1.23-1.834a3 3 0 00.527-2.116z"/>
+                  </svg>
+                  Test
+                </button>
+                <button id="reset-button" class="btn btn-sm btn-secondary">
+                  <svg class="octicon" height="16" width="16" viewBox="0 0 16 16" aria-hidden="true" style="vertical-align:text-bottom;">
+                    <path fill-rule="evenodd" d="M1.705 3.255a.75.75 0 011.06.05A6.5 6.5 0 118 14.5a.75.75 0 010-1.5a5 5 0 10-3.665-8.5l1.2 1.2a.75.75 0 01-1.06 1.06L1.77 4.085a.75.75 0 01-.065-1.06z"/>
+                  </svg>
+                  Reset
+                </button>
+            </div>
+        </div>
+        <div class="border-bottom">
+            <div class="Box-body">
+                <style>
+                    /* 防止下拉框在 Select2 初始化前闪现展开（FOUC） */
+                    #interviews-filters[data-enhanced="0"] .dropdown-select { visibility: hidden; min-height: 20px; }
+                    #interviews-filters[data-enhanced="0"] .select2-container { display: none !important; }
+                    #interviews-filters[data-enhanced="1"] .dropdown-select { visibility: visible; }
+                    /* 平滑显隐与占位，避免布局跳动 */
+                    #interviews-filters .filters-row { opacity: 1; transition: opacity .2s ease; min-height: 34px; }
+                    #interviews-filters[data-enhanced="0"] .filters-row { opacity: 0; }
+                    #interviews-filters[data-enhanced="1"] .filters-row { opacity: 1; }
+                </style>
+                <div class="filters-row d-flex" style="gap: 16px;">
+                    <!-- Category Dropdown -->
+                    <div class="dropdown-container">
+                        <label for="category-dropdown" class="dropdown-label">Categories:</label>
+                        <div class="dropdown-select">
+                            <select id="category-dropdown" class="dropdown-select-element" multiple>
+                                {{ $allInterviewPages := where .Site.RegularPages "Section" "interviews" }}
+                                {{ range $allInterviewPages }}
+                                <option value="{{ .Title | urlize }}">{{ .Title }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Tags Dropdown -->
+                    <div class="dropdown-container">
+                        <label for="tags-dropdown" class="dropdown-label">Tags:</label>
+                        <div class="dropdown-select">
+                            <select id="tags-dropdown" class="dropdown-select-element" multiple>
+                                <!-- 所有标签会通过JavaScript动态加载 -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="interview-details">
+        {{ $pages := .Paginate (where .Site.RegularPages "Section" "interviews") 10000 }}
+        {{ range $pages.Pages }}
+            <div class="interview-file-content" data-category="{{ .Title | urlize }}">
+                {{ .Content }}
+            </div>
+        {{ end }}
+    </div>
+    {{ if gt .Paginator.TotalPages 1 }}
+    <div class="paginate-container">
+        {{ partial "pagination.html" . }}
+    </div>
+    {{ end }}
+</div>
+
+<!-- 直接引入interviews.js脚本 -->
+<script src="{{ "js/interviews.js" | absURL }}"></script>
+{{ end }} 

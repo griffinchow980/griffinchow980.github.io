@@ -1,0 +1,290 @@
+/* Interviews page width alignment: make filters and details the same width */
+#interviews-filters,
+#interview-details {
+    max-width: var(--interviews-content-width, 1024px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 让 filters 视觉宽度与下面每个 details（simple-details: margin 2px）一致 */
+/* #interviews-filters {
+    box-sizing: border-box;
+    padding-left: 2px;
+    padding-right: 2px;
+} */
+
+@media (max-width: 1024px) {
+    #interviews-filters,
+    #interview-details {
+        max-width: 100%;
+    }
+}
+
+/* =================== interviews.css =================== */
+
+/* 分页样式略 */
+
+/* 下拉多选框容器 */
+.dropdown-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 260px;
+}
+
+.dropdown-label {
+    margin: 0;
+    white-space: nowrap;
+    font-weight: 500;
+    color: var(--color-fg-default, #24292f);
+}
+
+/* 下拉选择框 */
+.dropdown-select {
+    position: relative;
+    background: transparent;
+    border-radius: 6px;
+}
+
+.dropdown-select-element {
+    width: 200px;
+    min-height: 36px;
+    font-size: 14px;
+    line-height: 1.4;
+    border: 1px solid var(--color-border-default, #d0d7de);
+    border-radius: 6px;
+    background-color: var(--color-canvas-default, #fff);
+    color: var(--color-fg-default, #24292f);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.dropdown-select-element:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border: 1px solid var(--color-border-default, #d0d7de) !important;
+    background-color: var(--color-canvas-default, #fff) !important;
+}
+
+/* 下拉选项样式（仅主题黑白灰，易于选择，无高亮） */
+.dropdown-select-element option {
+    padding: 8px 12px;
+    background-color: var(--color-canvas-default, #fff);
+    color: var(--color-fg-default, #24292f);
+    transition: background 0.15s;
+}
+
+/* 鼠标悬停时的选项样式（模拟TOC风格，黑白灰调） */
+.dropdown-select-element option:hover{
+    background-color: var(--color-action-list-item-default-hover-bg, #eaeef2);
+    color: var(--color-fg-default, #24292f);
+}
+
+/* 选中时（不高亮文字，仅背景微变） */
+.dropdown-select-element option:checked {
+    background-color: var(--color-neutral-muted, #eaeef2);
+    color: var(--color-fg-default, #24292f);
+}
+
+/* Select2 下拉菜单整体 */
+.select2-container--default .select2-dropdown {
+    border-color: var(--color-border-default, #d0d7de);
+    background-color: var(--color-canvas-default, #fff);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    padding: 4px 0;
+}
+
+/* Select2 下拉选项（仿TOC，黑白灰调，无高亮） */
+.select2-container--default .select2-results__option {
+    padding: 4px 12px;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: var(--color-canvas-default, #fff);
+    color: var(--color-fg-default, #24292f);
+    border-radius: 3px;
+    margin: 1px 4px;
+    transition: background 0.12s;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Select2 下拉选项 hover/active（仿TOC，黑白灰调） */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--color-action-list-item-default-hover-bg, #eaeef2);
+    color: var(--color-fg-default, #24292f);
+}
+
+/* Select2 选中项（不高亮文字，仅背景微变） */
+.select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: var(--color-neutral-muted, #eaeef2);
+    color: var(--color-fg-default, #24292f);
+}
+
+/* Select2 多选已选标签（chip） */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: var(--color-canvas-subtle, #f6f8fa);
+    border: 1px solid var(--color-border-default, #d0d7de);
+    color: var(--color-fg-default, #24292f);
+    border-radius: 6px;
+    font-size: 12px;
+    margin: 2px;
+    /* padding: 2px 8px; */
+}
+
+/* 不要 chip hover 高亮 */
+/* .select2-container--default .select2-selection--multiple .select2-selection__choice:hover {
+    background-color: var(--color-canvas-subtle, #f6f8fa);
+    color: var(--color-fg-default, #24292f);
+} */
+
+/* 亮色模式下 select2 下拉项 hover 强制覆盖为主题灰色 */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--color-action-list-item-default-hover-bg, #eaeef2) !important;
+    color: var(--color-fg-default, #24292f) !important;
+}
+
+
+/* 暗色模式适配 */
+
+[data-color-mode="dark"] .dropdown-label {
+    color: var(--color-fg-default, #e6edf3);
+}
+
+[data-color-mode="dark"] .dropdown-select-element {
+    background-color: var(--color-canvas-default, #161b22);
+    border-color: var(--color-border-default, #30363d);
+    color: var(--color-fg-default, #e6edf3);
+}
+
+[data-color-mode="dark"] .dropdown-select-element option {
+    background-color: var(--color-canvas-default, #161b22);
+    color: var(--color-fg-default, #e6edf3);
+}
+
+[data-color-mode="dark"] .dropdown-select-element option:hover,
+[data-color-mode="dark"] .dropdown-select-element option:focus {
+    background-color: var(--color-action-list-item-default-hover-bg, #30363d);
+    color: var(--color-fg-default, #e6edf3);
+}
+
+[data-color-mode="dark"] .dropdown-select-element option:checked {
+    background-color: var(--color-neutral-muted, #444c56);
+    color: var(--color-fg-default, #e6edf3);
+}
+
+/* Select2 暗色模式整体 */
+[data-color-mode="dark"] .select2-container--default .select2-dropdown {
+    background-color: var(--color-canvas-default, #161b22);
+    border-color: var(--color-border-default, #30363d);
+}
+
+[data-color-mode="dark"] .select2-container--default .select2-results__option {
+    background-color: var(--color-canvas-default, #161b22);
+    color: var(--color-fg-default, #e6edf3);
+}
+
+/* Select2 暗色模式 hover */
+[data-color-mode="dark"] .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--color-action-list-item-default-hover-bg, #30363d);
+    color: var(--color-fg-default, #e6edf3);
+}
+
+/* Select2 暗色模式选中项 */
+[data-color-mode="dark"] .select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: var(--color-neutral-muted, #444c56);
+    color: var(--color-fg-default, #e6edf3);
+}
+
+/* Select2 暗色模式选中项 hover（关键，保证选中项 hover 不消失） */
+[data-color-mode="dark"] .select2-container--default .select2-results__option--selected {
+    background-color: #444c56 !important;
+    color: #e6edf3 !important;
+}
+[data-color-mode="dark"] .select2-container--default .select2-results__option--selected.select2-results__option--highlighted {
+    background-color: #444c56 !important;
+    color: #e6edf3 !important;
+}
+
+/* Select2 多选已选标签（chip）暗色 */
+[data-color-mode="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: var(--color-canvas-subtle, #21262d);
+    border: 1px solid var(--color-border-default, #30363d);
+    color: var(--color-fg-default, #e6edf3);
+}
+
+[data-color-mode="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice:hover {
+    background-color: var(--color-canvas-subtle, #21262d);
+    color: var(--color-fg-default, #e6edf3);
+}
+
+[data-color-mode="dark"] .select2-container--default .select2-selection--multiple {
+    background-color: var(--color-canvas-default, #161b22) !important;
+    border-color: var(--color-border-default, #30363d) !important;
+    color: var(--color-fg-default, #e6edf3) !important;
+}
+
+[data-color-mode="dark"] .select2-container--default .select2-selection--multiple .select2-search__field {
+    background-color: transparent !important;
+    color: var(--color-fg-default, #e6edf3) !important;
+}
+
+[data-color-mode="dark"] .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    background-color: transparent !important;
+}
+
+/* 其它部分（分页、标签等） */
+
+/* 让 .btn-outline 字体颜色随主题变化 */
+.btn-outline {
+    color: var(--color-btn-text, #24292f); /* 亮色模式下为深色 */
+    border-color: var(--color-border-default, #d0d7de);
+    background: transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+.btn-outline:hover,
+.btn-outline:focus {
+    color: var(--color-btn-hover-text, #0969da);
+    border-color: var(--color-accent-fg, #0969da);
+    background: var(--color-action-list-item-default-hover-bg, #eaeef2);
+    text-decoration: none;
+}
+
+/* 暗色模式适配 */
+[data-color-mode="dark"] .btn-outline {
+    color: var(--color-fg-default, #e6edf3); /* 暗色模式下为浅色 */
+    border-color: var(--color-border-default, #30363d);
+    background: transparent;
+}
+[data-color-mode="dark"] .btn-outline:hover,
+[data-color-mode="dark"] .btn-outline:focus {
+    color: var(--color-accent-fg, #58a6ff);
+    border-color: var(--color-accent-fg, #58a6ff);
+    background: var(--color-action-list-item-default-hover-bg, #30363d);
+}
+
+/* 响应式 */
+@media (max-width: 600px) {
+    .filters-row {
+        flex-direction: column;
+        flex-wrap: wrap !important;
+        overflow-x: visible;
+        gap: 12px;
+    }
+    .dropdown-container {
+        width: 100%;
+        min-width: 0;
+    }
+    .dropdown-select-element {
+        width: 100%;
+    }
+    .select2-container {
+        width: 100% !important;
+    }
+}

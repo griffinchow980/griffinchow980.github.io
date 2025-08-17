@@ -1,0 +1,57 @@
+/* Minimal Prism CSS for code blocks within Markmap nodes.
+   Only colors; no JS. Keep defaults so it looks fine in both themes. */
+
+/* Base code block inside markmap (pre > code) */
+.diagram-rendered.diagram-markmap pre code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: #24292f; /* default light */
+}
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap pre code {
+  color: #c9d1d9; /* default dark */
+}
+
+/* Comments */
+.diagram-rendered.diagram-markmap code .token.comment,
+.diagram-rendered.diagram-markmap code .token.prolog,
+.diagram-rendered.diagram-markmap code .token.doctype,
+.diagram-rendered.diagram-markmap code .token.cdata {
+  color: #6a737d;
+}
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code .token.comment,
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code .token.prolog,
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code .token.doctype,
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code .token.cdata {
+  color: #8b949e;
+}
+
+/* Strings */
+.diagram-rendered.diagram-markmap code .token.string { color: #032f62; }
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code .token.string { color: #a5d6ff; }
+
+/* Keywords */
+.diagram-rendered.diagram-markmap code .token.keyword { color: #d73a49; }
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code .token.keyword { color: #ff7b72; }
+
+/* Functions */
+.diagram-rendered.diagram-markmap code .token.function { color: #6f42c1; }
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code .token.function { color: #d2a8ff; }
+
+/* Numbers */
+.diagram-rendered.diagram-markmap code .token.number { color: #005cc5; }
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code .token.number { color: #79c0ff; }
+
+/* Operators */
+.diagram-rendered.diagram-markmap code .token.operator { color: #24292f; }
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code .token.operator { color: #c9d1d9; }
+
+/* Inline code (not fenced) */
+.diagram-rendered.diagram-markmap code:not([class*="language-"]) {
+  background: rgba(127,127,127,0.08);
+  padding: .1em .3em;
+  border-radius: 3px;
+}
+[data-color-mode="dark"] .diagram-rendered.diagram-markmap code:not([class*="language-"]) {
+  background: rgba(127,127,127,0.2);
+}

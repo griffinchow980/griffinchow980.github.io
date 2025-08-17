@@ -1,0 +1,78 @@
+{{/*
+  简洁 Details 短代码 - 支持 Markdown 和标签
+  ！！！注意：此短代码不能用 markdown 标题，否则会被 TOC 解析为标题。
+  用法：{{< details "**标题** 支持 `markdown`" "tag1,tag2,tag3" >}}内容{{< /details >}}
+  或者：{{< details "**标题** 支持 `markdown`" >}}内容{{< /details >}}
+*/}}
+{{ $title := .Get 0 | default "详细信息" }}
+{{ $tags := .Get 1 | default "" }}
+
+<details class="simple-details"{{ with $tags }} data-tags="{{ . }}"{{ end }}>
+  <summary class="simple-summary">
+    <span class="arrow">▶</span>
+    <span class="title">{{ $title | markdownify | safeHTML }}</span>
+  </summary>
+  <div class="simple-content">
+    {{ .Inner | markdownify }}
+  </div>
+</details>
+<!-- <script>
+(function() {
+  // 获取刚刚创建的details元素
+  const details = document.currentScript.previousElementSibling;
+  if (!details || details.tagName.toLowerCase() !== 'details') return;
+  
+  // 获取当前details的箭头元素
+  const arrow = details.querySelector(':scope > summary > .arrow');
+  if (!arrow) return;
+  
+  // 初始化箭头状态
+  if (details.open) {
+    arrow.style.transform = 'rotate(90deg)';
+    arrow.style.transition = 'transform 0.3s';
+  }
+  
+  // 监听details的toggle事件
+  details.addEventListener('toggle', function() {
+    if (this.open) {
+      arrow.style.transform = 'rotate(90deg)';
+      arrow.style.transition = 'transform 0.3s';
+    } else {
+      arrow.style.transform = 'rotate(0deg)';
+      arrow.style.transition = 'transform 0.3s';
+    }
+  });
+  
+  // 处理嵌套的details元素
+  const nestedDetails = details.querySelectorAll('.simple-details');
+  nestedDetails.forEach(function(nestedDetail) {
+    // 跳过自身
+    if (nestedDetail === details) return;
+    
+    // 获取嵌套details的箭头
+    const nestedArrow = nestedDetail.querySelector(':scope > summary > .arrow');
+    if (!nestedArrow) return;
+    
+    // 确保嵌套details的箭头初始状态正确
+    if (nestedDetail.open) {
+      nestedArrow.style.transform = 'rotate(90deg)';
+    } else {
+      nestedArrow.style.transform = 'rotate(0deg)';
+    }
+    
+    // 为嵌套details添加toggle事件监听
+    nestedDetail.addEventListener('toggle', function(e) {
+      // 阻止事件冒泡
+      e.stopPropagation();
+      
+      if (this.open) {
+        nestedArrow.style.transform = 'rotate(90deg)';
+        nestedArrow.style.transition = 'transform 0.3s';
+      } else {
+        nestedArrow.style.transform = 'rotate(0deg)';
+        nestedArrow.style.transition = 'transform 0.3s';
+      }
+    });
+  });
+})();
+</script> -->

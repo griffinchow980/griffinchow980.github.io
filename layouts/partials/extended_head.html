@@ -1,0 +1,124 @@
+{{/* 
+  自定义 extended_head.html - 添加数学公式支持
+  这个文件会覆盖主题的 extended_head.html
+*/}}
+
+{{/* 原有的 extended_head 内容 */}}
+<meta name="description"
+  content="{{ if .IsHome }}{{ .Site.Params.tagline }}{{ else }}{{ .Summary | plainify }}{{ end }}" />
+<meta name="keywords"
+  content='{{ with .Params.Keywords }}{{ delimit . ", " }}{{ else }}{{ $.Site.Params.Keywords }}{{ end }}' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="{{ .Permalink }}" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="{{ if .IsHome }}{{ else }}{{ .Title }} - {{ end }}{{ .Site.Title }}" />
+<meta name="twitter:description"
+  content="{{ if .IsHome }}{{ $.Site.Params.description }}{{ else }}{{ .Summary | plainify }}{{ end }}" />
+<meta name="twitter:site" content="{{ $.Site.BaseURL }}" />
+<meta name="twitter:creator" content="{{ .Params.Author }}" />
+<meta name="twitter:image"
+  content="{{ if .IsHome }}{{ $.Site.Params.avatar | absURL }}{{ else }}{{ .Params.Cover | absURL }}{{ end }}">
+
+<!-- OG data -->
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
+<meta property="og:title" content="{{ if .IsHome }}{{ else }}{{ .Title }} - {{ end }}{{ .Site.Title }}">
+<meta property="og:description"
+  content="{{ if .IsHome }}{{ $.Site.Params.description }}{{ else }}{{ .Summary | plainify }}{{ end }}" />
+<meta property="og:url" content="{{ .Permalink }}" />
+<meta property="og:site_name" content="{{ .Title }}" />
+<meta property="og:image"
+  content="{{ if .IsHome }}{{ $.Site.Params.avatar | absURL }}{{ else }}{{ .Params.Cover | absURL }}{{ end }}">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+{{ if isset .Params "date" }}
+<meta property="article:published_time" content="{{ time .Date }}" />
+{{ end }}
+
+<!-- 添加排序功能支持 -->
+{{ if .Params.sort }}
+<meta name="sort" content="true">
+{{ end }}
+
+<!-- RSS -->
+{{ with .OutputFormats.Get "RSS" }}
+<link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" />
+{{ end }}
+
+<!-- Admonition CSS -->
+<link rel="stylesheet" href='{{ "css/admonitions.css" | absURL }}' />
+
+<!-- Details CSS -->
+<link rel="stylesheet" href='{{ "css/details.css" | absURL }}' />
+
+<!-- Interviews CSS -->
+<link rel="stylesheet" href='{{ "css/interviews.css" | absURL }}' />
+
+<!-- JSON Feed -->
+{{ with .OutputFormats.Get "json" }}
+<link href="{{ .RelPermalink }}" rel="alternate" type="application/json" title="{{ $.Site.Title }}" />
+{{ end }}
+
+<!-- Google Analytics -->
+{{ if eq (getenv "HUGO_ENV") "production"}}
+{{ template "_internal/google_analytics.html" . }}
+{{ end }}
+
+{{/* 数学公式支持 - KaTeX */}}
+{{ if or .Params.katex .Params.math .Site.Params.katex }}
+<!-- KaTeX CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+
+<!-- KaTeX JavaScript -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+
+<!-- KaTeX auto-render extension -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+
+<!-- KaTeX配置和初始化 -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+        // 分隔符配置
+        delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '\\[', right: '\\]', display: true}
+        ],
+        // 其他选项
+        throwOnError: false,
+        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+        ignoredClasses: ['no-math'],
+        strict: false
+    });
+});
+</script>
+
+<!-- KaTeX自定义样式 -->
+<style>
+.katex-display {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.katex {
+    font-size: 1em;
+}
+
+/* 适配暗色主题 */
+[data-color-mode="dark"] .katex {
+    color: var(--color-fg-default, #e6edf3);
+}
+
+/* tabs 内的公式样式 */
+.tab-content .katex-display {
+    margin: 1rem 0;
+}
+</style>
+
+
+{{ end }}
+
+

@@ -1,0 +1,134 @@
+/* Generic diagram wrappers hidden code and transparent background */
+
+/* Hide original code blocks via JS after render; keep CSS neutral to avoid flicker */
+
+/* containers created by diagrams.js */
+.diagram-rendered {
+  position: relative;
+  margin: 1rem 0;
+  width: 100%;
+  min-height: 100%;
+  overflow: visible;
+}
+
+/* transparent backgrounds */
+.diagram-rendered svg,
+.diagram-rendered canvas,
+.diagram-rendered .markmap,
+.diagram-rendered img {
+  background: transparent !important;
+}
+
+/* theme-aware stroke/fill defaults; we let libs use currentColor when possible */
+:root,
+[data-color-mode="light"] {
+  /* --diagram-foreground: #24292f; */
+  --diagram-foreground-inverse: #ffffff;
+  
+  /* Sync Mermaid official theme */
+  --mermaid-theme: default;
+
+}
+[data-color-mode="dark"] {
+  /* --diagram-foreground: #c9d1d9; */
+  --diagram-foreground-inverse: #000000;
+  /* Sync Mermaid official theme */
+  --mermaid-theme: dark;
+}
+
+/* Generic color defaults for many libs, but avoid overriding markmap/echarts colors */
+.diagram-rendered:not(.diagram-markmap):not(.diagram-echarts),
+.diagram-rendered:not(.diagram-markmap):not(.diagram-echarts) svg,
+.diagram-rendered:not(.diagram-markmap):not(.diagram-echarts) .node text,
+.diagram-rendered:not(.diagram-markmap):not(.diagram-echarts) .edgePath path,
+.diagram-rendered:not(.diagram-markmap):not(.diagram-echarts) .edgeLabel text {
+  color: var(--diagram-foreground);
+  fill: var(--diagram-foreground);
+  stroke: var(--diagram-foreground);
+}
+
+/* markmap: let library color scales work; only set base text color softly */
+.diagram-rendered.diagram-markmap text {
+  fill: currentColor;
+}
+
+/* fit images/SVG and center */
+.diagram-rendered svg,
+.diagram-rendered img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Center Mermaid, Flowchart, and PlantUML outputs */
+.diagram-rendered.diagram-mermaid svg,
+.diagram-rendered.diagram-flowchart svg,
+.diagram-rendered img[alt="PlantUML diagram"] {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Markmap should use full width of its container without fixed width/height */
+.diagram-rendered.diagram-markmap {
+  width: 100%;
+  height: auto;
+}
+.diagram-rendered.diagram-markmap svg { aspect-ratio: 16 / 9; }
+/* Only affect SVG text color; avoid overriding HTML code/inline code inside markmap */
+.diagram-rendered.diagram-markmap svg text {
+  fill: var(--diagram-foreground) !important;
+}
+.diagram-rendered.diagram-markmap, .diagram-rendered.diagram-markmap * {
+  color: var(--diagram-foreground);
+}
+/* Do not add borders/outlines to echarts containers */
+.diagram-rendered.diagram-echarts, 
+.diagram-rendered.diagram-echarts * {
+  border: none !important;
+  outline: none !important;
+}
+
+/* make PlantUML adapt dark theme via CSS filter (approximate) */
+[data-color-mode="dark"] .diagram-rendered img[alt="PlantUML diagram"] {
+  filter: invert(0.9) hue-rotate(180deg) contrast(0.95);
+}
+
+/* Mermaid now uses real theme; no CSS filter needed */
+
+/* Mermaid sequence numbers: ensure color tracks theme via CSS as a fallback */
+.diagram-rendered.diagram-mermaid .sequenceNumber,
+.diagram-rendered.diagram-mermaid .sequenceNumber text,
+.diagram-rendered.diagram-mermaid text.sequenceNumber {
+  fill: var(--diagram-foreground-inverse) !important;
+  color: var(--diagram-foreground-inverse) !important;
+}
+
+/* Mermaid: lighten text weight for Gantt and Packet diagrams */
+.diagram-rendered.diagram-mermaid--gantt svg text,
+.diagram-rendered.diagram-mermaid--packet svg text {
+  font-weight: 300 !important; /* normal */
+}
+
+/* Simple toolbar styles */
+.diagram-toolbar {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+.diagram-toolbar__btn {
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 6px;
+  color: var(--diagram-foreground);
+  background: rgba(127,127,127,0.12);
+  border: 1px solid rgba(127,127,127,0.25);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.diagram-toolbar__btn:hover {
+  background: rgba(127,127,127,0.2);
+}

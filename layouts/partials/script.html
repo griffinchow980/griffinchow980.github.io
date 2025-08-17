@@ -1,0 +1,142 @@
+<script type="application/javascript" src="{{ "js/github-style.js" | absURL }}"></script>
+{{ if or .Params.math .Site.Params.math }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+{{ end }}
+
+{{ if or .Params.MathJax .Site.Params.MathJax }}
+<script type="text/javascript" async
+  src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: {
+          equationNumbers: { autoNumber: "AMS" },
+          extensions: ["AMSmath.js", "AMSsymbols.js"]
+        }
+      }
+    });
+
+    MathJax.Hub.Queue(function () {
+      // Fix <code> tags after MathJax finishes running. This is a
+      // hack to overcome a shortcoming of Markdown. Discussion at
+      // https://github.com/mojombo/jekyll/issues/199
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+
+<style>
+  code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+  }
+</style>
+{{ end }}
+
+{{ if .Site.Params.enableSearch }}
+<script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
+<script type="application/javascript" src='{{ "js/search.js" | absURL }}'></script>
+{{ end }}
+
+<!-- Diagram libs: Mermaid pinned to v11.9.0; other libs loaded on demand by diagrams.js -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.min.js"></script>
+<!-- markmap libs are loaded on demand by diagrams.js to ensure proper order -->
+<!-- echarts (local UMD) -->
+<script src='{{ "vendor/echarts.min.js" | absURL }}'></script>
+<!-- plantuml encoder -->
+<script src="https://cdn.jsdelivr.net/npm/plantuml-encoder@1.4.0/dist/plantuml-encoder.min.js"></script>
+<!-- Our diagram bootstrapping script -->
+<script type="application/javascript" src='{{ "js/diagrams.js" | absURL }}'></script>
+
+<!-- Load interviews.js on interviews pages -->
+{{ if eq .Section "interviews" }}
+<script type="application/javascript" src='{{ "js/interviews.js" | absURL }}'></script>
+{{ end }}
+
+<!-- 确保interviews.js在所有页面中都正确加载 -->
+<script>
+// 直接计算interviews数量并更新计数器
+(function() {
+  // 立即执行的函数，确保变量不会污染全局作用域
+  function updateInterviewsCounter() {
+    // 获取所有计数器元素
+    const counters = document.querySelectorAll('.interviews-counter');
+    if (counters.length === 0) return; // 如果没有计数器，直接返回
+    
+    // 如果当前页面是interviews页面
+    if (window.location.pathname.includes('/interviews/')) {
+      // 等待DOM完全加载后计算
+      setTimeout(function() {
+        const container = document.getElementById('interview-details');
+        if (container) {
+          // 获取顶层details数量
+          const detailsCount = Array.from(container.children)
+            .filter(el => el.tagName && el.tagName.toLowerCase() === 'details')
+            .length;
+          
+          // 更新所有计数器
+          counters.forEach(counter => {
+            counter.textContent = detailsCount;
+          });
+        }
+      }, 500);
+    } else {
+      // 非interviews页面，通过AJAX获取数量
+      fetch('/interviews/')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.text();
+        })
+        .then(html => {
+          // 创建一个临时的DOM元素来解析HTML
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          
+          // 查找所有details元素
+          const detailsElements = tempDiv.querySelectorAll('.simple-details');
+          const detailsCount = detailsElements.length;
+          
+          // 更新所有计数器
+          counters.forEach(counter => {
+            counter.textContent = detailsCount;
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching interviews:', error);
+          // 发生错误时，显示一个默认值
+          counters.forEach(counter => {
+            counter.textContent = '?';
+          });
+        });
+    }
+  }
+  
+  // 页面加载完成后执行
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateInterviewsCounter);
+  } else {
+    // 如果DOMContentLoaded已经触发，直接执行
+    updateInterviewsCounter();
+  }
+  
+  // 确保在window完全加载后再次尝试
+  window.addEventListener('load', updateInterviewsCounter);
+})();
+</script>

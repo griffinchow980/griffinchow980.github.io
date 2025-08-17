@@ -1,0 +1,142 @@
+/* TOC 目录菜单 - 精简版，完全兼容 github-style 主题 */
+/* 版本: v3 - 强制缓存刷新 */
+
+/* TOC 按钮样式 - 无边框、无阴影设计 */
+#toc-toggle {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: var(--color-fg-muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 8px;
+    font-size: 12px;
+    line-height: 1;
+    transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+    min-width: 0;
+    box-shadow: none;
+    outline: none;
+}
+
+#toc-toggle:hover {
+    background-color: var(--color-btn-hover-bg);
+    color: var(--color-fg-default);
+    box-shadow: none;
+}
+
+#toc-toggle:active {
+    color: var(--color-fg-default);
+    box-shadow: none;
+    outline: none;
+}
+
+/* TOC 菜单容器 - 使用固定定位 */
+div.SelectMenu#toc-details {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 280px;
+    max-width: calc(100vw - 32px);
+    margin: 0;
+    padding: 0;
+    will-change: transform;
+    display: none;
+    /* 确保紧贴 header，无额外间距 */
+    margin-top: 0;
+}
+
+/* TOC 菜单主体 - 更紧凑的设计 */
+div.SelectMenu#toc-details .SelectMenu-modal {
+    background: var(--color-canvas-overlay);
+    border: 1px solid var(--color-border-default);
+    border-radius: 6px;
+    box-shadow: var(--color-shadow-large);
+    max-height: 320px;
+    overflow: hidden;
+    position: relative;
+    margin: 0;
+}
+
+/* TOC 列表容器 */
+div.SelectMenu#toc-details .SelectMenu-list {
+    padding: 4px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+/* 滚动条样式 */
+div.SelectMenu#toc-details .SelectMenu-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+div.SelectMenu#toc-details .SelectMenu-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+div.SelectMenu#toc-details .SelectMenu-list::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-muted);
+    border-radius: 3px;
+}
+
+div.SelectMenu#toc-details .SelectMenu-list::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-emphasis);
+}
+
+/* TOC 项目样式 - 更紧凑 */
+.toc-item {
+    display: block;
+    padding: 4px 12px;
+    color: var(--color-fg-default);
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.12s ease-out;
+    background: transparent;
+    border-radius: 3px;
+    margin: 1px 4px;
+}
+
+.toc-item:hover {
+    background-color: var(--color-action-list-item-default-hover-bg);
+    text-decoration: none;
+    color: var(--color-fg-default);
+}
+
+.toc-item:active {
+    background-color: var(--color-action-list-item-default-active-bg);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    div.SelectMenu#toc-details {
+        width: 260px;
+        max-width: calc(100vw - 16px);
+    }
+    
+    .toc-item {
+        font-size: 12px;
+        padding: 3px 10px;
+    }
+}
+
+/* 兼容暗色模式 */
+[data-color-mode="dark"] div.SelectMenu#toc-details .SelectMenu-modal {
+    background: var(--color-canvas-overlay);
+    border-color: var(--color-border-default);
+}
+
+[data-color-mode="dark"] .toc-item {
+    color: var(--color-fg-default);
+}
+
+[data-color-mode="dark"] .toc-item:hover {
+    background-color: var(--color-action-list-item-default-hover-bg);
+}
+

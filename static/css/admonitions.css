@@ -1,0 +1,186 @@
+/* Admonition component (Hugo shortcode)
+   依赖 GitHub Primer 设计系统颜色变量，自动适配明/暗主题 */
+
+details.admonition {
+  border: 1px solid var(--adm-color, var(--color-border-default));
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+
+details.admonition summary {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-weight: 400;
+  list-style: none;
+  border-radius: 6px;
+  color: var(--adm-color, var(--color-fg-default));
+}
+
+/* 当详情展开时，去除下方圆角以与内容衔接 */
+
+/* 仅对当前（直接子级）summary 取消下圆角，避免父级影响子级 */
+details.admonition[open] > summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* 图标大小 */
+.admonition-icon svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  position: relative;
+  top: 2px; /* 微调垂直对齐 */
+}
+
+.admonition-arrow {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  position: relative;
+  top: 1px;
+}
+
+/* arrow inherits mapped color */
+.admonition-arrow svg { color: inherit; }
+
+/* 为箭头应用同样的颜色映射 */
+/* 仅作用于本级 summary 内的箭头，避免父级影响子级 */
+.admonition-note > summary .admonition-arrow svg,
+.admonition-abstract > summary .admonition-arrow svg,
+.admonition-info > summary .admonition-arrow svg { color: var(--color-accent-fg); }
+
+.admonition-tip > summary .admonition-arrow svg,
+.admonition-success > summary .admonition-arrow svg { color: var(--color-success-fg); }
+
+.admonition-warning > summary .admonition-arrow svg { color: var(--color-attention-fg); }
+
+.admonition-failure > summary .admonition-arrow svg,
+.admonition-bug > summary .admonition-arrow svg { color: var(--color-danger-fg); }
+
+.admonition-example > summary .admonition-arrow svg,
+.admonition-quote > summary .admonition-arrow svg { color: var(--color-fg-muted); }
+
+/* 旋转 */
+
+/* 仅旋转当前 open details 的箭头，防止祖先 open 影响嵌套 */
+details.admonition[open] > summary .admonition-arrow svg {
+  transform: rotate(90deg);
+}
+
+/* 避免非折叠(static) 可点击 */
+details.admonition.static summary {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* 标题文字使用默认前景色，适配明暗主题 */
+
+
+.admonition-content {
+  padding: 10px;
+  /* 6px垂直内边距，减少底部空间 */
+  color: var(--color-fg-default);
+}
+
+/* 更强匹配：去除最后元素的外边距，防止底部留白 */
+.admonition-content *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Color variants */
+/* Accent 系 */
+.admonition-note,
+.admonition-abstract,
+.admonition-info {
+  border-color: var(--color-accent-fg);
+}
+
+.admonition-note > summary,
+.admonition-abstract > summary,
+.admonition-info > summary {
+  color: var(--color-accent-fg);
+  background-color: var(--color-accent-subtle);
+}
+
+/* Success 系 */
+.admonition-tip,
+.admonition-success {
+  border-color: var(--color-success-fg);
+}
+
+.admonition-tip > summary,
+.admonition-success > summary {
+  color: var(--color-success-fg);
+  background-color: var(--color-success-subtle);
+}
+
+/* Warning 系 */
+.admonition-warning {
+  border-color: var(--color-attention-fg);
+}
+
+.admonition-warning > summary {
+  color: var(--color-attention-fg);
+  background-color: var(--color-attention-subtle);
+}
+
+/* Danger 系 */
+.admonition-failure,
+.admonition-bug {
+  border-color: var(--color-danger-fg);
+}
+
+.admonition-failure > summary,
+.admonition-bug > summary {
+  color: var(--color-danger-fg);
+  background-color: var(--color-danger-subtle);
+}
+
+/* 中性 */
+.admonition-example,
+.admonition-quote {
+  border-color: var(--color-fg-muted);
+}
+
+.admonition-example > summary,
+.admonition-quote > summary {
+  color: var(--color-fg-muted);
+  background-color: var(--color-neutral-subtle);
+}
+
+/* 设置整体颜色，icon/arrow/边框同步 */
+/* 定义变量，仅用于边框 + 标题/Icon，不影响内容文本 */
+.admonition-note,
+.admonition-abstract,
+.admonition-info { --adm-color: var(--color-accent-fg); }
+.admonition-tip,
+.admonition-success { --adm-color: var(--color-success-fg); }
+.admonition-warning { --adm-color: var(--color-attention-fg); }
+.admonition-failure,
+.admonition-bug { --adm-color: var(--color-danger-fg); }
+.admonition-example,
+.admonition-quote { --adm-color: var(--color-fg-muted); } 
+
+/* 标签文本样式 */
+.admonition-label {
+  font-size: 0.95em; /* 比正文略小，如果感觉大可调 */
+  font-weight: 500;
+  color: var(--color-fg-default); /* 始终黑/白随主题 */
+} 
+
+/******** head 对齐 ********/
+.admonition-head {
+  display: inline-flex;
+  align-items: baseline; /* icon 与文本基线对齐 */
+  gap: 0.3rem;
+}
+
+summary {
+  display: flex;
+  align-items: flex-start; /* 与第一行顶部对齐 */
+}
+
+.admonition-arrow { margin-left: auto; } 

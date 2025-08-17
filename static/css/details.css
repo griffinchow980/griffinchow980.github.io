@@ -1,0 +1,372 @@
+/* 简洁的 Details 样式 - 带边框 */
+.simple-details {
+  margin: 2px;
+  border: 1px solid var(--color-border-default, #d0d7de);
+  border-radius: 6px;
+  background: var(--color-canvas-default, #ffffff);
+  overflow: hidden;
+}
+
+/* 紧凑排列：相邻的 details 间距更小 */
+.simple-details + .simple-details {
+  margin-top: 0px;
+}
+
+.simple-summary {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 12px;
+  color: var(--color-fg-default, #24292f);
+  list-style: none;
+  user-select: none;
+  background: var(--color-canvas-subtle, #f6f8fa);
+  border-bottom: 1px solid var(--color-border-default, #d0d7de);
+  transition: background-color 0.2s ease;
+}
+
+.simple-summary:hover {
+  background: var(--color-neutral-muted, rgba(175, 184, 193, 0.2));
+}
+
+/* 隐藏默认标记 */
+.simple-summary::-webkit-details-marker {
+  display: none;
+}
+
+.simple-summary::-moz-list-bullet {
+  list-style-type: none;
+}
+
+/* 箭头样式 */
+.simple-summary .arrow {
+  margin-right: 4px;
+  font-size: 12px;
+  color: var(--color-fg-muted, #656d76);
+  transition: transform 0.2s ease;
+  min-width: 12px;
+  text-align: center;
+}
+
+/* 展开时箭头向下转90度 */
+.simple-details[open] .simple-summary .arrow {
+  transform: rotate(90deg);
+}
+
+/* 未展开时移除底部边框 */
+.simple-details:not([open]) .simple-summary {
+  border-bottom: none;
+}
+
+/* 标题样式 */
+.simple-summary .title {
+  flex: 1;
+  font-weight: 500;
+}
+
+/* 移除标题中段落的边距 */
+.simple-summary .title p {
+  margin: 0;
+  display: inline;
+}
+
+/* 内容样式 */
+.simple-content {
+  padding: 10px;
+  color: var(--color-fg-default, #24292f);
+  background: var(--color-canvas-default, #ffffff);
+}
+
+.simple-content ul,
+.simple-content ol {
+    padding-left: 20px;
+}
+
+/* 内容中第一个元素的上边距 */
+.simple-content > *:first-child {
+  margin-top: 0;
+}
+
+/* 内容中最后一个元素的下边距 */
+.simple-content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* 暗色主题适配 */
+[data-color-mode="dark"] .simple-details {
+  border-color: var(--color-border-default, #30363d);
+  background: var(--color-canvas-default, #0d1117);
+}
+
+[data-color-mode="dark"] .simple-summary {
+  color: var(--color-fg-default, #e6edf3);
+  background: var(--color-canvas-subtle, #161b22);
+  border-bottom-color: var(--color-border-default, #30363d);
+}
+
+[data-color-mode="dark"] .simple-summary:hover {
+  background: var(--color-neutral-muted, rgba(110, 118, 129, 0.1));
+}
+
+[data-color-mode="dark"] .simple-summary .arrow {
+  color: var(--color-fg-muted, #7d8590);
+}
+
+[data-color-mode="dark"] .simple-content {
+  color: var(--color-fg-default, #e6edf3);
+  background: var(--color-canvas-default, #0d1117);
+}
+
+/* 悬停效果 */
+.simple-summary:hover .arrow {
+  color: var(--color-fg-default, #24292f);
+}
+
+[data-color-mode="dark"] .simple-summary:hover .arrow {
+  color: var(--color-fg-default, #e6edf3);
+}
+
+/* 打开状态的动画 */
+.simple-content {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Interviews filters: match content width and fix bottom border sharp line */
+#interviews-filters {
+  /* Match typical GitHub-style content width; stays responsive */
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 6px; /* ensure rounded corners */
+  overflow: hidden;   /* clip inner borders to radius to avoid straight protruding line */
+}
+
+/* When sticky at top, make the top edges straight to blend with the top viewport edge */
+#interviews-filters.is-stuck {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* On small screens, let it fill the width naturally (max-width already allows this) */
+@media (max-width: 1012px) {
+  #interviews-filters { max-width: 100%; }
+}
+
+/* Details 排序按钮组样式 - post-header 内右上角定位 */
+#post-header {
+    position: relative; /* 为绝对定位的按钮提供相对定位容器 */
+}
+
+/* 确保 sticky header 功能不被覆盖 */
+#post-header.sticky-header {
+    position: sticky !important;
+    top: 0 !important;
+}
+
+#post-header .details-sort-controls {
+    position: absolute;
+    top: 0;
+    right: 8px;
+    bottom: 0;
+    z-index: 999999 !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    background: transparent; /* 外框不显示 */
+    border: none; /* 外框不显示 */
+    border-radius: 0;
+    padding: 0 8px;
+    box-shadow: none; /* 外框不显示 */
+}
+
+#post-header .details-sort-controls .sort-button {
+    background: var(--color-btn-bg, #f6f8fa);
+    color: var(--color-btn-text, #24292f);
+    border: 1px solid var(--color-btn-border, #d0d7de);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 72px;
+    justify-content: center;
+    height: calc(100% - 2px); /* header 高度减去 2px */
+    max-height: 34px; /* 防止按钮过高，增大最大高度 */
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+#post-header .details-sort-controls .sort-button:hover {
+    background: var(--color-btn-hover-bg, #f3f4f6);
+    border-color: var(--color-btn-hover-border, #b1b4b6);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#post-header .details-sort-controls .sort-button:active {
+    background: var(--color-btn-active-bg, #edeff2);
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+#post-header .details-sort-controls .sort-button .icon {
+    font-size: 13px;
+}
+
+/* 暗色主题按钮适配 */
+[data-color-mode="dark"] #post-header .details-sort-controls .sort-button {
+    background: var(--color-btn-bg, #21262d);
+    color: var(--color-btn-text, #e6edf3);
+    border-color: var(--color-btn-border, #30363d);
+}
+
+[data-color-mode="dark"] #post-header .details-sort-controls .sort-button:hover {
+    background: var(--color-btn-hover-bg, #30363d);
+    border-color: var(--color-btn-hover-border, #8b949e);
+}
+
+[data-color-mode="dark"] #post-header .details-sort-controls .sort-button:active {
+    background: var(--color-btn-active-bg, #282e33);
+}
+
+/* 暗色主题适配 */
+[data-color-mode="dark"] #post-header .details-sort-controls {
+    background: var(--color-canvas-default, #0d1117);
+    border-color: var(--color-border-default, #30363d);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+[data-color-mode="dark"] #post-header .details-sort-controls .sort-button {
+    background: var(--color-btn-bg, #21262d);
+    color: var(--color-btn-text, #e6edf3);
+    border-color: var(--color-btn-border, #30363d);
+}
+
+[data-color-mode="dark"] #post-header .details-sort-controls .sort-button:hover {
+    background: var(--color-btn-hover-bg, #30363d);
+    border-color: var(--color-btn-hover-border, #8b949e);
+    box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+}
+
+[data-color-mode="dark"] #post-header .details-sort-controls .sort-button:active {
+    background: var(--color-btn-active-bg, #282e33);
+    box-shadow: 0 1px 4px rgba(255,255,255,0.05);
+}
+
+/* 移动端响应式调整 */
+@media (max-width: 768px) {
+    #post-header .details-sort-controls {
+        gap: 6px;
+    }
+    
+    #post-header .details-sort-controls .sort-button {
+        padding: 5px 8px;
+        min-width: 56px;
+        height: 28px;
+        font-size: 11px;
+    }
+    
+    #post-header .details-sort-controls .sort-button .icon {
+        font-size: 11px;
+    }
+}
+
+/* 已移除超小屏幕调整 - 所有设备统一使用桌面端大小 */
+
+/* 确保 file-info 容器能够容纳按钮 */
+#post-header .file-info {
+    overflow: visible;
+}
+
+/* 调整 file-info 的 flex 布局，确保按钮有足够空间 */
+#post-header .file-info .details-sort-controls {
+    margin-left: auto;
+    margin-right: 12px;
+}
+
+/* 为 post-header 添加更好的 flex 布局支持 */
+#post-header {
+    overflow-x: auto; /* 在小屏幕上允许水平滚动 */
+}
+
+#post-header .file-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap; /* 防止换行 */
+    min-width: 0; /* 允许 flex 子元素收缩 */
+}
+
+#post-header .file-info .text-mono {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* 当按钮与文字在一行时的间距调整 */
+#post-header .file-info .text-mono .details-sort-controls {
+    margin-left: 16px;
+}
+
+/* 已移除移动端布局调整 - 所有设备保持一致布局 */
+
+/* 优化按钮在 sticky header 中的表现 */
+.sticky-header #post-header .details-sort-controls .sort-button {
+    background: var(--color-canvas-default, #ffffff);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+[data-color-mode="dark"] .sticky-header #post-header .details-sort-controls .sort-button {
+    background: var(--color-canvas-default, #0d1117);
+    box-shadow: 0 1px 3px rgba(255,255,255,0.1);
+}
+
+/* 提示消息样式 */
+.details-sort-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999999 !important;
+    background: var(--color-success-emphasis, #1a7f37);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+
