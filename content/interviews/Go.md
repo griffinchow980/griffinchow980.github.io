@@ -3,13 +3,21 @@ title: "Go"
 date: 2024-05-19T10:00:00+08:00
 draft: false
 ---
-
-{{< details "Go 语言的 goroutine 是什么？" "并发,基础" >}}
-goroutine 是 Go 语言中并发执行的单元。它由 Go 运行时管理，比线程更轻量。
+# 基础
+{{< details "init() 函数是什么时候执行的?" "初始化" >}}
+在main函数之前执行。
+- 初始化不能采用初始化表达式初始化的变量，
+- 程序运行前执行注册
+- 实现sync.Once功能
+- 不能被其它函数调用
+- init函数没有入口参数和返回值
+- 每个包可以有多个init函数，每个源文件也可以有多个init函数同一个包的init执行顺序，golang没有明确定义，编程时要注意程序不要依赖这个执行顺序。
+- 不同包的init函数按照包导入的依赖关系决定执行顺序。
 {{< /details >}}
 
-{{< details "Go 语言的 channel 是什么？" "并发,通信" >}}
-channel 是 goroutine 之间通信的管道。它可以用来在 goroutine 之间传递数据。
+{{< details "new和make的区别?" "并发,通信" >}}
+- new只用于分配内存，返回一个指向地址的指针。它为每个新类型分配一片内存，初始化为0旦返回类型*T的内存地址，它相当于&T{}
+- make只可用于slice,map,channel的初始化,返回的是引用
 {{< /details >}}
 
 {{< details "Go 语言的 defer 关键字有什么作用？" "关键字,语法" >}}

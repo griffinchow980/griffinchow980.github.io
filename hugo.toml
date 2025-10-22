@@ -16,8 +16,9 @@ pygmentsUseClasses = true
     codeFences = true
     guessSyntax = true
     noClasses = false
-  [markup.goldmark.renderer]
-    unsafe = true
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
 
 [params]
   author = "Griffin Chow"
