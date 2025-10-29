@@ -1,7 +1,7 @@
 ---
 title: "Excel数据处理"
 date: 2025-03-20
-categories: ["数据分析"]
+categories: ["数据分析","Office"]
 tags: ["数据分析","Excel"]
 summary: "Excel数据处理"
 math: true

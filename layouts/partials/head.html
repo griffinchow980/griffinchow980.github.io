@@ -2,7 +2,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <script type="application/javascript" src='{{ "js/theme-mode.js" | absURL }}'></script>
+    <!-- ⚡ 关键CSS：必须在最前面，防止details内容闪现（FOUC） -->
+    <style>
+        .simple-details:not([open]) .simple-content {
+            display: none !important;
+        }
+        .simple-details[open] .simple-content {
+            display: block !important;
+        }
+    </style>
+    <script type="application/javascript" src='{{ "js/core/theme-mode.js" | absURL }}'></script>
     <link rel="stylesheet" href="https://unpkg.com/@primer/css@^21.0.0/dist/primer.css">
     <link rel="stylesheet" href='{{ "css/frameworks.min.css" | absURL }}' />
     <link rel="stylesheet" href='{{ "css/github.min.css" | absURL }}' />
@@ -26,7 +35,7 @@
     {{- end }}
 
     <!-- Diagrams CSS -->
-    <link rel="stylesheet" href='{{ "css/diagrams.css" | absURL }}' />
+    <link rel="stylesheet" href='{{ "css/diagrams.css" | absURL }}?v={{ now.Unix }}' />
     <!-- Markmap Prism minimal CSS -->
     <link rel="stylesheet" href='{{ "css/prism-markmap.css" | absURL }}' />
 

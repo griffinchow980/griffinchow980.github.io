@@ -1,4 +1,4 @@
-baseURL = 'https://griffinchow980.github.io/'
+baseURL = 'https://www.griffinchow.cn/'
 languageCode = 'zh-cn'
 title = 'My New Hugo Site'
 # theme = "github-style" # 已移除主题
@@ -22,17 +22,17 @@ pygmentsUseClasses = true
 
 [params]
   author = "Griffin Chow"
-  description = "My Hugo Blog"
+  description = "Griffin's Blog"
   github = "griffinchow980"
   email = "griffinchow980@gmail.com"
-  url = "https://griffinchow980.github.io/"
+  url = "https://www.griffinchow.cn"
   keywords = "blog, hugo, programming"
   # rss = true
   lastmod = true
   favicon = "/images/github-mark.png"
   avatar = "/images/avater_xiaomai_01.jpg"
   headerIcon = "/images/github-mark-white.png"
-  location = "Earth"
+  location = "China"
   userStatusEmoji = "😆"
   enableGitalk = false
   enableSearch = true
@@ -56,13 +56,13 @@ pygmentsUseClasses = true
   ]
   # 完整的脚本文件配置
   custom_js = [
-    "/js/theme-mode.js",
-    "/js/copy-code.js", 
-    "/js/back-to-top.js", 
-    "/js/tabs.js", 
-    # "/js/details-sort.js",
-    "/js/toc.js",
-    "/js/interviews.js"
+    "/js/core/theme-mode.js",
+    "/js/features/copy-code.js", 
+    "/js/features/back-to-top.js", 
+    "/js/features/tabs.js", 
+    # "/js/features/details-sort.js",
+    "/js/core/toc.js",
+    "/js/pages/interviews.js"
   ]
 
   [[params.links]]

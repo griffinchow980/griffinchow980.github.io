@@ -5,6 +5,7 @@ categories: ["数据分析"]
 tags: ["数据分析","A/B测试"]
 summary: "A/B测试是互联网常用工具，用于验证功能上线效果，是提升用户体验和留存率的关键手段"
 math: true
+pin: true
 ---
 
 # A/B测试完整业务流程

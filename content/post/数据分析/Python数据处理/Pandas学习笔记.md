@@ -5,6 +5,7 @@ categories: ["Python"]
 tags: ["Python","Pandas"]
 summary: "概述 Pandas 安装、核心数据结构、输入输出、数据清洗与操作（选择/分组/合并）、描述性统计、相关性与透视、时间序列、常用函数、可视化、性能优化及综合案例"
 math: true
+pin: true
 ---
 
 # 1 安装
@@ -14,12 +15,25 @@ math: true
 pip --version                    # 查看 pip 版本，确认安装状态
 pip install pandas               # 安装最新稳定版 Pandas
 pip install --upgrade pandas     # 将已安装的 Pandas 升级到最新版本
+
+# MySQL相关依赖
+pip install pymysql              # MySQL数据库连接器
+pip install sqlalchemy           # SQL工具包和对象关系映射
 ```
 
 验证：
 ```python
 import pandas as pd              # 导入 pandas 库
 print(pd.__version__)            # 输出当前安装的 pandas 版本号
+
+# 验证MySQL连接
+import pymysql
+try:
+    conn = pymysql.connect(host='localhost', user='root', password='password', database='test')
+    print("MySQL连接成功！")
+    conn.close()
+except Exception as e:
+    print(f"MySQL连接失败：{e}")
 ```
 
 ### 1.1.2 使用 conda 安装
@@ -27,6 +41,8 @@ print(pd.__version__)            # 输出当前安装的 pandas 版本号
 conda create -n myenv python=3.8 # 创建名为 myenv 的虚拟环境并指定 Python 3.8
 conda activate myenv             # 激活该虚拟环境
 conda install pandas             # 在虚拟环境中安装 Pandas
+conda install pymysql            # 安装MySQL连接器
+conda install sqlalchemy         # 安装SQL工具包
 ```
 
 # 2 数据结构
@@ -161,8 +177,18 @@ with open('output_row_by_row.json','w') as f:     # 手工逐行写
 
 ## 3.7 从数据库读取
 ```python
-import sqlite3                                           # 导入 sqlite3
-conn = sqlite3.connect('example.db')                     # 连接或创建数据库文件
+import pymysql                                           # 导入 pymysql
+import pandas as pd
+
+# 连接MySQL数据库
+conn = pymysql.connect(
+    host='localhost',                                    # 数据库主机地址
+    user='username',                                     # 数据库用户名
+    password='password',                                 # 数据库密码
+    database='database_name',                            # 数据库名称
+    charset='utf8mb4'                                    # 字符集
+)
+
 df_sql = pd.read_sql_query("SELECT * FROM tablename",    # 执行 SQL 查询转换为 DataFrame
                            conn)
 for _, row in df_sql.iterrows():                         # 逐行处理结果
@@ -172,14 +198,32 @@ conn.close()                                             # 关闭连接
 
 ## 3.8 写入数据库
 ```python
-conn = sqlite3.connect('example.db')                     # 重新连接数据库
-df_sql.to_sql('tablename', conn,                         # 将 DataFrame 写入表
+import pymysql
+import pandas as pd
+
+# 连接MySQL数据库
+conn = pymysql.connect(
+    host='localhost',                                    # 数据库主机地址
+    user='username',                                     # 数据库用户名
+    password='password',                                 # 数据库密码
+    database='database_name',                            # 数据库名称
+    charset='utf8mb4'                                    # 字符集
+)
+
+# 方法1：使用pandas的to_sql方法（需要sqlalchemy）
+from sqlalchemy import create_engine
+engine = create_engine('mysql+pymysql://username:password@localhost/database_name?charset=utf8mb4')
+df_sql.to_sql('tablename', engine,                      # 将 DataFrame 写入表
               if_exists='replace',                       # 若存在则替换
               index=False)                               # 不写入行索引
-for _, row in df_sql.iterrows():                         # 追加方式逐行写入
-    row.to_frame().T.to_sql('tablename', conn,           # 把 Series 转成单行 DataFrame
-                            if_exists='append',          # 追加到已存在表
-                            index=False)
+
+# 方法2：逐行写入（适合大数据量或需要自定义处理）
+cursor = conn.cursor()
+for _, row in df_sql.iterrows():                         # 逐行处理
+    sql = "INSERT INTO tablename (col1, col2, col3) VALUES (%s, %s, %s)"
+    cursor.execute(sql, (row['col1'], row['col2'], row['col3']))
+conn.commit()                                            # 提交事务
+cursor.close()                                           # 关闭游标
 conn.close()                                             # 关闭连接
 ```
 

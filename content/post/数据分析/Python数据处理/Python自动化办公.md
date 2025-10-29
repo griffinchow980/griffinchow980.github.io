@@ -1,9 +1,11 @@
+---
 title: "Python自动化办公脚本"
 date: 2024-10-22
 categories: ["Python","自动化","Office"]
 tags: ["Excel","Word","PDF","OCR"]
 summary: "26 个常用办公自动化脚本，加入大量关键步骤中文注释，路径占位语义化，可直接改路径运行。"
-
+pin: true
+---
 
 ## 1. 从 PDF 导出的旧版 XLS 抽取列写入模板并格式化
 

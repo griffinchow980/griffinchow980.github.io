@@ -2,7 +2,7 @@
 
 /* 基础容器 - 完全无边框和背景 */
 .tabs-container {
-  margin: 0;
+  margin: 0 1.5rem 0 0;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -70,7 +70,7 @@
   display: none;
   padding: 0;
   background: transparent;
-  margin-top: 6px;
+  margin-top: 1rem;
   border: none;
   box-shadow: none;
   animation: fadeIn 0.15s ease-in-out;
@@ -99,8 +99,17 @@
 }
 
 .tab-content ul, .tab-content ol {
+  margin-top: 0.75rem;
   margin-bottom: 1rem;
   padding-left: 1.5rem;
+}
+
+.tab-content li {
+  margin-bottom: 0.5rem;
+}
+
+.tab-content li:last-child {
+  margin-bottom: 0;
 }
 
 .tab-content blockquote {
@@ -109,17 +118,21 @@
   border-left: 4px solid var(--color-border-default, #d0d7de);
 }
 
-/* 代码块样式 - 继承主题样式，减少边距 */
+/* 代码块样式 - 继承主题样式，增加边距 */
 .tab-content pre {
-  margin: 0.5rem 0;
+  margin: 1rem 0;
 }
 
 .tab-content .highlight {
-  margin: 0.5rem 0;
+  margin: 1rem 0;
 }
 
 .tab-content .highlight pre {
   margin: 0;
+}
+
+.tab-content code {
+  margin: 0.25rem 0;
 }
 
 /* 暗色主题适配 */
@@ -176,5 +189,20 @@
 }
 
 .tabs-container .tab-content > *:last-child {
-  margin-bottom: 0;
+  margin-bottom: 1rem;
+}
+
+/* 确保tabs后面的内容有足够间距 */
+.tabs-container + p,
+.tabs-container + ul,
+.tabs-container + ol,
+.tabs-container + pre,
+.tabs-container + .highlight,
+.tabs-container + h1,
+.tabs-container + h2,
+.tabs-container + h3,
+.tabs-container + h4,
+.tabs-container + h5,
+.tabs-container + h6 {
+  margin-top: 1.5rem;
 }

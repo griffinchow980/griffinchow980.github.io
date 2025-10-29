@@ -1,4 +1,4 @@
-<script type="application/javascript" src="{{ "js/github-style.js" | absURL }}"></script>
+<script type="application/javascript" src="{{ "js/pages/github-style.js" | absURL }}"></script>
 {{ if or .Params.math .Site.Params.math }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
   integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
@@ -6,7 +6,21 @@
   integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
   integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
-  onload="renderMathInElement(document.body);"></script>
+  onload="(function() {
+    // Only render KaTeX on pages that are NOT Markmap pages
+    // Markmap handles its own KaTeX rendering natively
+    if (!document.querySelector('.diagram-markmap')) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    } else {
+      console.log('Markmap page detected - skipping global KaTeX rendering');
+    }
+  })();"></script>
 {{ end }}
 
 {{ if or .Params.MathJax .Site.Params.MathJax }}
@@ -50,7 +64,7 @@
 
 {{ if .Site.Params.enableSearch }}
 <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
-<script type="application/javascript" src='{{ "js/search.js" | absURL }}'></script>
+<script type="application/javascript" src='{{ "js/core/search.js" | absURL }}'></script>
 {{ end }}
 
 <!-- Diagram libs: Mermaid pinned to v11.9.0; other libs loaded on demand by diagrams.js -->
@@ -58,14 +72,22 @@
 <!-- markmap libs are loaded on demand by diagrams.js to ensure proper order -->
 <!-- echarts (local UMD) -->
 <script src='{{ "vendor/echarts.min.js" | absURL }}'></script>
+<!-- echarts wordcloud extension -->
+<script src='{{ "vendor/echarts-wordcloud.min.js" | absURL }}'></script>
+<!-- echarts map data -->
+<script src='{{ "vendor/maps/china.js" | absURL }}'></script>
+<script src='{{ "vendor/maps/world.js" | absURL }}'></script>
 <!-- plantuml encoder -->
 <script src="https://cdn.jsdelivr.net/npm/plantuml-encoder@1.4.0/dist/plantuml-encoder.min.js"></script>
 <!-- Our diagram bootstrapping script -->
-<script type="application/javascript" src='{{ "js/diagrams.js" | absURL }}'></script>
+<script type="application/javascript" src='{{ "js/features/diagrams.js" | absURL }}?v={{ now.Unix }}'></script>
+<!-- Markmap math rendering (handles KaTeX within Markmap SVGs) -->
+<script type="application/javascript" src='{{ "js/features/markmap-math.js" | absURL }}?v={{ now.Unix }}'></script>
+<!-- Markmap + KaTeX is handled by global KaTeX rendering above -->
 
 <!-- Load interviews.js on interviews pages -->
 {{ if eq .Section "interviews" }}
-<script type="application/javascript" src='{{ "js/interviews.js" | absURL }}'></script>
+<script type="application/javascript" src='{{ "js/pages/interviews.js" | absURL }}'></script>
 {{ end }}
 
 <!-- 确保interviews.js在所有页面中都正确加载 -->

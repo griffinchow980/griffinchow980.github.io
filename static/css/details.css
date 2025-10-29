@@ -1,15 +1,40 @@
 /* 简洁的 Details 样式 - 带边框 */
 .simple-details {
-  margin: 2px;
+  margin: 1rem 0;
   border: 1px solid var(--color-border-default, #d0d7de);
   border-radius: 6px;
   background: var(--color-canvas-default, #ffffff);
   overflow: hidden;
 }
 
+/* 防止内容闪现（FOUC）- details默认关闭时隐藏内容 */
+.simple-details:not([open]) .simple-content {
+  display: none !important;
+}
+
+/* 确保details在打开时显示内容（覆盖内联样式） */
+.simple-details[open] .simple-content {
+  display: block !important;
+}
+
 /* 紧凑排列：相邻的 details 间距更小 */
 .simple-details + .simple-details {
-  margin-top: 0px;
+  margin-top: 2px;
+}
+
+/* details 与其他元素的间距 */
+.simple-details + p,
+.simple-details + ul,
+.simple-details + ol,
+.simple-details + pre,
+.simple-details + .highlight,
+.simple-details + h1,
+.simple-details + h2,
+.simple-details + h3,
+.simple-details + h4,
+.simple-details + h5,
+.simple-details + h6 {
+  margin-top: 1.5rem;
 }
 
 .simple-summary {
@@ -72,24 +97,106 @@
 
 /* 内容样式 */
 .simple-content {
-  padding: 10px;
+  padding: 16px;
   color: var(--color-fg-default, #24292f);
   background: var(--color-canvas-default, #ffffff);
 }
 
+/* 段落间距 */
+.simple-content p {
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* 列表样式和间距 */
 .simple-content ul,
 .simple-content ol {
-    padding-left: 20px;
+  padding-left: 20px;
+  margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.simple-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.simple-content li:last-child {
+  margin-bottom: 0;
+}
+
+/* 嵌套列表间距 */
+.simple-content li > ul,
+.simple-content li > ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+/* 列表项中的段落间距 */
+.simple-content li > p {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* 代码块间距 */
+.simple-content pre {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.simple-content .highlight {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.simple-content .highlight pre {
+  margin: 0;
+}
+
+/* 行内代码间距 */
+.simple-content code {
+  margin: 0 0.15rem;
+}
+
+/* 标题间距 */
+.simple-content h1,
+.simple-content h2,
+.simple-content h3,
+.simple-content h4,
+.simple-content h5,
+.simple-content h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 引用块间距 */
+.simple-content blockquote {
+  margin: 1rem 0 1.5rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid var(--color-border-default, #d0d7de);
+}
+
+/* 表格间距 */
+.simple-content table {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* 分隔线间距 */
+.simple-content hr {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 /* 内容中第一个元素的上边距 */
 .simple-content > *:first-child {
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 
 /* 内容中最后一个元素的下边距 */
 .simple-content > *:last-child {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 /* 暗色主题适配 */
@@ -115,6 +222,10 @@
 [data-color-mode="dark"] .simple-content {
   color: var(--color-fg-default, #e6edf3);
   background: var(--color-canvas-default, #0d1117);
+}
+
+[data-color-mode="dark"] .simple-content blockquote {
+  border-left-color: var(--color-border-default, #30363d);
 }
 
 /* 悬停效果 */
@@ -294,7 +405,7 @@
 
 /* 确保 file-info 容器能够容纳按钮 */
 #post-header .file-info {
-    overflow: visible;
+    overflow: clip;
 }
 
 /* 调整 file-info 的 flex 布局，确保按钮有足够空间 */

@@ -2,7 +2,7 @@
 title: "xlwings 操作手册"
 date: 2024-03-04
 categories: ["数据分析"]
-tags: ["数据分析","python","xlwings"]
+tags: ["数据分析","python","xlwings","excel"]
 summary: "xlwings 是一个让 Python 与本地 Excel 双向高效交互的库"
 ---
   

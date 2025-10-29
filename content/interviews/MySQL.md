@@ -1,7 +1,6 @@
 ---
 title: "MySQL"
-date: 2024-05-19T10:02:00+08:00
-draft: false
+date: 2023-09-30
 ---
 
 {{< details "MySQL 的 InnoDB 和 MyISAM 存储引擎有什么区别？" >}}

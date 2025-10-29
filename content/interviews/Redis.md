@@ -1,7 +1,6 @@
 ---
 title: "Redis"
-date: 2024-05-19T10:01:00+08:00
-draft: false
+date: 2023-09-15
 ---
 
 {{< details "Redis 有哪些数据结构？" >}}

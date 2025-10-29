@@ -12,7 +12,7 @@
     <span class="arrow">▶</span>
     <span class="title">{{ $title | markdownify | safeHTML }}</span>
   </summary>
-  <div class="simple-content">
+  <div class="simple-content" style="display: none;">
     {{ .Inner | markdownify }}
   </div>
 </details>

@@ -1,7 +1,6 @@
 ---
 title: "Kubernetes"
-date: 2024-05-19T10:04:00+08:00
-draft: false
+date: 2023-08-20
 ---
 
 {{< details "Kubernetes 是什么？" >}}

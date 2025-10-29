@@ -8,7 +8,7 @@
   margin: 1rem 0;
   width: 100%;
   min-height: 100%;
-  overflow: visible;
+  overflow: clip;
 }
 
 /* transparent backgrounds */
@@ -51,6 +51,24 @@
 .diagram-rendered.diagram-markmap text {
   fill: currentColor;
 }
+
+/* Markmap layout optimization */
+.diagram-rendered.diagram-markmap svg {
+  max-width: 100% !important;
+}
+
+/* Compact node spacing */
+.diagram-rendered.diagram-markmap .markmap-node {
+  font-size: 14px;
+}
+
+/* Markmap with KaTeX rendering */
+.diagram-rendered.diagram-markmap foreignObject {
+  overflow: clip !important;
+}
+
+/* Let markmap-katex.css handle Markmap styling completely */
+/* All Markmap-specific styles have been moved to static/css/markmap-katex.css */
 
 /* fit images/SVG and center */
 .diagram-rendered svg,

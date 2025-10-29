@@ -8,8 +8,8 @@
 {{- $pages := $pages | union (where (where site.Pages "Section" "authors") "Params.superuser" "!=" nil) -}}
 
 {{- range $pages -}}
-  {{- /* Do not index drafts or private pages. */ -}}
-  {{- if and (not .Draft) (not .Params.private) | and (ne .Params.searchable false) -}}
+  {{- /* Do not index drafts, private pages, or interviews section. */ -}}
+  {{- if and (and (not .Draft) (not .Params.private)) (and (ne .Params.searchable false) (ne .Section "interviews")) -}}
 
     {{- /* Generate page description. */ -}}
     {{- $desc := "" -}}

@@ -4,6 +4,7 @@ date: 2025-06-01
 categories: ["数据库"]
 tags: ["数据分析","数据库","SQL","刷题模板"]
 summary: "SQL 常见题目刷题模板"
+pin: true
 ---
 
 # 类型一：时间间隔类问题

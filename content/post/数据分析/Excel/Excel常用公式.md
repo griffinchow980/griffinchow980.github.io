@@ -1,10 +1,11 @@
 ---
 title: "Excel常用公式"
 date: 2025-03-27
-categories: ["数据分析"]
+categories: ["数据分析","Office"]
 tags: ["数据分析","Excel"]
 summary: "Excel常用公式"
 math: true
+pin: true
 ---
 ```markmap
 # 公式
