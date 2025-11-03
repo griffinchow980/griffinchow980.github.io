@@ -374,7 +374,7 @@
         ["2025-06-30", 55],
         ["2025-09-27", 30],
         ["2025-10-10", 40],
-        ["2025-10-30", 55]
+        ["2025-11-03", 55]
       ],
       "markPoint": {
         "symbol": "circle",
@@ -771,9 +771,9 @@
   </li>
 
   <li>
-    <a class="card" href="/post/数据分析/项目/基于鱼泡直聘数据剖析数据分析岗各纬度综合现状/基于鱼泡直聘数据剖析数据分析岗各纬度综合现状/">
+    <a class="card" href="/post/数据分析/项目/基于2025年10月的鱼泡直聘数据分析岗的分析与可视化/基于2025年10月的鱼泡直聘数据分析岗的分析与可视化/">
       <div class="card-body">
-        <h3 class="card-title">基于2025年10月的鱼泡直聘数据分析岗的分析与可视化 <span class="card-tag card-tag-danger" style="vertical-align: top;">10月26日刚做的 🥵</span></h3>
+        <h3 class="card-title">基于2025年10月的鱼泡直聘数据分析岗的分析与可视化 <span class="card-tag card-tag-danger" style="vertical-align: top;">刚做的 🥵</span></h3>
         <p class="card-summary">基于鱼泡直聘284条数据分析岗位数据，深度剖析薪资水平（平均14564元/月）、经验要求、学历分布、技能需求（SQL、Python核心）及地域差异，揭示一线城市与新一线城市的就业机会与薪资结构</p>
         <div class="card-tags">
           <span class="card-tag card-tag-info" data-href="/tags/python/" onclick="event.preventDefault(); event.stopPropagation(); window.location.href=this.dataset.href; return false;" style="cursor: pointer;">爬虫</span>
@@ -791,7 +791,7 @@
   <li>
     <a class="card" href="https://www.coze.cn/s/O9BVPqYeRSo/">
       <div class="card-body">
-        <h3 class="card-title">通用日常分析可视化报告 <span class="card-tag card-tag-purple" style="vertical-align: top;">coze</span></h3>
+        <h3 class="card-title">通用日常分析可视化报告AI应用 <span class="card-tag card-tag-purple" style="vertical-align: top;">coze</span></h3>
         <p class="card-summary">日常分析报告（日报/周报/月报/季报/年报）是对业务场景进行常态化监测的描述统计类报告；通过活动、拉新、渠道等多维度数据，展现业务执行现状（如销售额、用户流失、同比环比等核心指标），分析现象背后的原因，预测未来趋势，并提供可行性建议；特点是"不求最深但求最全"</p>
         <div class="card-tags">
           <span class="card-tag card-tag-info" data-href="/tags/Coze/" onclick="event.preventDefault(); event.stopPropagation(); window.location.href=this.dataset.href; return false;" style="cursor: pointer;">Coze</span>
@@ -803,6 +803,8 @@
 </ul>
 
 ### 后端开发
+
+TODO...
 
 ## EDUCATION
 **本科**

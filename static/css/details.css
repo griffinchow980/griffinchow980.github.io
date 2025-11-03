@@ -1,8 +1,8 @@
 /* 简洁的 Details 样式 - 带边框 */
 .simple-details {
-  margin: 1rem 0;
+  margin: 0;
   border: 1px solid var(--color-border-default, #d0d7de);
-  border-radius: 6px;
+  border-radius: 0;
   background: var(--color-canvas-default, #ffffff);
   overflow: hidden;
 }
@@ -17,9 +17,20 @@
   display: block !important;
 }
 
-/* 紧凑排列：相邻的 details 间距更小 */
+/* 紧凑排列：相邻的 details 间距为0，边框合并 */
 .simple-details + .simple-details {
-  margin-top: 2px;
+  margin-top: -1px;
+}
+
+/* 第一个和最后一个 details 保留圆角 */
+.simple-details:first-of-type {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.simple-details:last-of-type {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 /* details 与其他元素的间距 */

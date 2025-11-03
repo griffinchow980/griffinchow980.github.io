@@ -103,7 +103,7 @@ $$
 ### 2.6.3 前端埋点代码示例
 
 以下是一个典型的Web页面AB测试埋点实现示例（基于JavaScript）：
-
+{{< admonition type="info" title="代码与输出" collapse="true" >}}
 ```javascript
 // AB-test配置与分组逻辑
 class ABTestTracker {
@@ -191,6 +191,7 @@ document.getElementById('cta-button').addEventListener('click', function() {
     abTracker.trackButtonClick('cta-button', 'Call To Action');
 });
 ```
+{{< /admonition >}}
 
 ### 2.6.4 后端数据聚合
 
