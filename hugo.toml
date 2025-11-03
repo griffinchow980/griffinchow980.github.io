@@ -67,9 +67,23 @@ pygmentsUseClasses = true
 
   [[params.links]]
     title = "csdn"
-    href = "https://meik2333.com"
+    href = "https://blog.csdn.net/qq_53099212?type=blog"
     icon = "/images/csdn.png"
 
+  [[params.links]]
+    title = "知乎"
+    href = "https://www.zhihu.com/people/te-si-la-pi"
+    icon = "/images/知乎.png"
+
+  [[params.links]]
+    title = "kaggle"
+    href = "https://www.kaggle.com/teslapeer"
+    icon = "/images/kaggle.png"
+
+  [[params.links]]
+    title = "知乎"
+    href = "https://stackoverflow.com/users/31803935/griffin-chow"
+    icon = "/images/stackoverflow.png"
 
 
 [outputs]

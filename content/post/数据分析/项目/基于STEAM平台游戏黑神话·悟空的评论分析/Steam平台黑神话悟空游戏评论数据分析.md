@@ -1759,7 +1759,6 @@ print(f"✓ 保存了 {len(data):,} 条评论数据")
 print(f"✓ 包含 {len(columns_to_save)} 个字段")
 print("\n数据分析完成！")
 ```
-{{< /admonition >}}
 
 **输出结果：**
 
@@ -1770,4 +1769,4 @@ print("\n数据分析完成！")
 
 数据分析完成！
 ```
-
+{{< /admonition >}}
