@@ -1824,3 +1824,705 @@ GROUP BY DATE_FORMAT(order_date, '%Y-%m');
 
 {{< /details >}}
 
+{{< details "**SQL的SELECT语句执行顺序是怎样的？**" "SQL" >}}
+
+很多人认为SQL语句是从SELECT开始执行的，但实际的执行顺序与书写顺序不同。
+
+**标准执行顺序**：
+
+```sql
+(8) SELECT (9) DISTINCT (11) TOP
+(1) FROM
+(3) JOIN
+(2) ON
+(4) WHERE
+(5) GROUP BY
+(6) WITH CUBE 或 WITH ROLLUP
+(7) HAVING
+(10) ORDER BY
+(12) LIMIT/OFFSET
+```
+
+**详细说明**：
+
+**1. FROM**：首先确定数据来源
+
+**2. ON**：对JOIN操作的表应用ON条件
+
+**3. JOIN**：执行JOIN操作，合并表
+
+**4. WHERE**：对合并后的结果集应用WHERE过滤条件
+
+**5. GROUP BY**：按指定列分组
+
+**6. 聚合函数**：计算每组的聚合值
+
+**7. HAVING**：对分组后的结果进行过滤
+
+**8. SELECT**：选择要返回的列
+
+**9. DISTINCT**：去除重复行
+
+**10. ORDER BY**：对结果排序
+
+**11. LIMIT/OFFSET**：限制返回的行数
+
+**实际案例分析**：
+
+```sql
+-- 查询每个城市总消费超过10000的用户数量
+SELECT 
+    city,
+    COUNT(DISTINCT user_id) as user_count,
+    SUM(amount) as total_amount
+FROM orders o
+JOIN users u ON o.user_id = u.user_id
+WHERE order_date >= '2024-01-01'
+GROUP BY city
+HAVING SUM(amount) > 10000
+ORDER BY total_amount DESC
+LIMIT 5;
+```
+
+**执行过程**：
+1. **FROM orders o**：扫描orders表
+2. **JOIN users u**：连接users表
+3. **ON o.user_id = u.user_id**：匹配连接条件
+4. **WHERE order_date >= '2024-01-01'**：过滤2024年的订单
+5. **GROUP BY city**：按城市分组
+6. **SUM(amount)**：计算每个城市的总金额
+7. **HAVING SUM(amount) > 10000**：筛选总额超过10000的城市
+8. **SELECT**：选择要显示的列
+9. **ORDER BY total_amount DESC**：按总金额降序
+10. **LIMIT 5**：只返回前5条
+
+**优化建议**：
+
+基于执行顺序的优化策略：
+
+1. **WHERE优先于HAVING**：能在WHERE中过滤的就不要在HAVING中过滤
+```sql
+-- 慢❌（先分组再过滤）
+GROUP BY user_id
+HAVING user_id > 1000
+
+-- 快✅（先过滤再分组）
+WHERE user_id > 1000
+GROUP BY user_id
+```
+
+2. **JOIN前先过滤**：使用子查询先过滤再JOIN
+```sql
+-- 慢❌
+FROM large_table t1
+JOIN large_table t2 ON t1.id = t2.id
+WHERE t1.date >= '2024-01-01'
+
+-- 快✅
+FROM (SELECT * FROM large_table WHERE date >= '2024-01-01') t1
+JOIN large_table t2 ON t1.id = t2.id
+```
+
+3. **避免在WHERE中使用函数**：会导致索引失效
+```sql
+-- 慢❌
+WHERE YEAR(order_date) = 2024
+
+-- 快✅
+WHERE order_date >= '2024-01-01' AND order_date < '2025-01-01'
+```
+
+{{< /details >}}
+
+{{< details "**什么是索引？索引的类型和使用场景？**" "SQL" >}}
+
+索引是数据库表中一列或多列值的数据结构，可以加快数据检索速度。
+
+**索引类型**：
+
+**1. 主键索引（PRIMARY KEY）**
+- 唯一且非空
+- 每个表只能有一个主键
+- 自动创建聚簇索引（InnoDB）
+
+```sql
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50)
+);
+```
+
+**2. 唯一索引（UNIQUE）**
+- 列值必须唯一，但可以有NULL
+- 可以有多个唯一索引
+
+```sql
+-- 单列唯一索引
+CREATE UNIQUE INDEX idx_email ON users(email);
+
+-- 多列唯一索引
+CREATE UNIQUE INDEX idx_username_email ON users(username, email);
+```
+
+**3. 普通索引（INDEX）**
+- 最基本的索引，无唯一性限制
+
+```sql
+-- 单列索引
+CREATE INDEX idx_name ON users(name);
+
+-- 多列索引（复合索引）
+CREATE INDEX idx_city_age ON users(city, age);
+```
+
+**4. 全文索引（FULLTEXT）**
+- 用于全文搜索
+- 只支持CHAR、VARCHAR、TEXT类型
+
+```sql
+CREATE FULLTEXT INDEX idx_content ON articles(title, content);
+
+-- 使用
+SELECT * FROM articles 
+WHERE MATCH(title, content) AGAINST('数据分析');
+```
+
+**索引数据结构**：
+
+**B+树索引**（InnoDB默认）：
+- 所有数据存储在叶子节点
+- 叶子节点形成有序链表
+- 范围查询效率高
+
+**哈希索引**（Memory引擎）：
+- 等值查询快
+- 不支持范围查询
+- 不支持排序
+
+**索引使用场景**：
+
+**适合建索引**：
+1. **WHERE条件频繁的列**
+```sql
+CREATE INDEX idx_user_id ON orders(user_id);
+```
+
+2. **JOIN连接的列**
+```sql
+CREATE INDEX idx_user_id ON orders(user_id);
+```
+
+3. **ORDER BY排序的列**
+```sql
+CREATE INDEX idx_order_date ON orders(order_date);
+```
+
+4. **GROUP BY分组的列**
+```sql
+CREATE INDEX idx_category ON products(category);
+```
+
+**不适合建索引**：
+1. **数据量小的表**（<1000行）
+2. **频繁更新的列**（维护索引开销大）
+3. **区分度低的列**（如性别，只有男/女）
+4. **长文本列**（可以对前缀建索引）
+
+**复合索引的最左前缀原则**：
+
+```sql
+-- 创建复合索引
+CREATE INDEX idx_abc ON table(a, b, c);
+
+-- 可以使用索引的查询
+WHERE a = 1                    ✅
+WHERE a = 1 AND b = 2          ✅
+WHERE a = 1 AND b = 2 AND c = 3 ✅
+WHERE a = 1 AND c = 3          ✅ (只用到a)
+
+-- 不能使用索引
+WHERE b = 2                    ❌
+WHERE c = 3                    ❌
+WHERE b = 2 AND c = 3          ❌
+```
+
+**索引优化建议**：
+
+```sql
+-- 1. 覆盖索引：查询的列都在索引中
+CREATE INDEX idx_user_name_age ON users(user_id, name, age);
+
+SELECT name, age FROM users WHERE user_id = 1;
+-- 不需要回表，直接从索引获取数据
+
+-- 2. 前缀索引：对长字符串建立前缀索引
+CREATE INDEX idx_email_prefix ON users(email(10));
+
+-- 3. 查看索引使用情况
+EXPLAIN SELECT * FROM users WHERE user_id = 1;
+
+-- 4. 删除无用索引
+SELECT * FROM sys.schema_unused_indexes;
+```
+
+{{< /details >}}
+
+{{< details "**什么是事务？ACID特性如何理解？**" "SQL" >}}
+
+事务是数据库执行的一系列操作的集合，这些操作要么全部成功，要么全部失败。
+
+**ACID特性**：
+
+**1. 原子性（Atomicity）**
+
+事务中的所有操作要么全部完成，要么全部不完成。
+
+```sql
+-- 转账场景：A转给B 100元
+START TRANSACTION;
+
+-- 操作1：A账户减100
+UPDATE accounts SET balance = balance - 100 WHERE user_id = 'A';
+
+-- 操作2：B账户加100
+UPDATE accounts SET balance = balance + 100 WHERE user_id = 'B';
+
+-- 如果任何一步失败，全部回滚
+COMMIT;  -- 全部成功
+-- 或
+ROLLBACK;  -- 全部撤销
+```
+
+**2. 一致性（Consistency）**
+
+事务执行前后，数据库从一个一致性状态转换到另一个一致性状态。
+
+```sql
+-- 约束保证一致性
+ALTER TABLE accounts ADD CONSTRAINT chk_balance CHECK (balance >= 0);
+
+START TRANSACTION;
+
+-- 这个操作会违反约束，事务会失败
+UPDATE accounts SET balance = balance - 1000 WHERE user_id = 'A';
+-- 错误：balance不能为负数
+
+ROLLBACK;
+```
+
+**3. 隔离性（Isolation）**
+
+并发执行的事务之间互不干扰。
+
+**隔离级别**：
+
+| 隔离级别 | 脏读 | 不可重复读 | 幻读 |
+|---------|------|-----------|------|
+| READ UNCOMMITTED | 可能 | 可能 | 可能 |
+| READ COMMITTED | 不可能 | 可能 | 可能 |
+| REPEATABLE READ | 不可能 | 不可能 | 可能 |
+| SERIALIZABLE | 不可能 | 不可能 | 不可能 |
+
+**脏读示例**：
+```sql
+-- 事务A
+START TRANSACTION;
+UPDATE accounts SET balance = 1000 WHERE user_id = 'A';
+-- 未提交
+
+-- 事务B（READ UNCOMMITTED）
+SELECT balance FROM accounts WHERE user_id = 'A';  -- 读到1000（脏数据）
+
+-- 事务A回滚
+ROLLBACK;
+-- 事务B读到的数据是无效的
+```
+
+**不可重复读示例**：
+```sql
+-- 事务A
+START TRANSACTION;
+SELECT balance FROM accounts WHERE user_id = 'A';  -- 第一次读：1000
+
+-- 事务B修改并提交
+UPDATE accounts SET balance = 2000 WHERE user_id = 'A';
+COMMIT;
+
+-- 事务A再次读取
+SELECT balance FROM accounts WHERE user_id = 'A';  -- 第二次读：2000
+-- 同一事务内，两次读取结果不一致
+```
+
+**幻读示例**：
+```sql
+-- 事务A
+START TRANSACTION;
+SELECT COUNT(*) FROM orders WHERE amount > 1000;  -- 第一次读：5条
+
+-- 事务B插入新数据
+INSERT INTO orders VALUES (6, 1500);
+COMMIT;
+
+-- 事务A再次统计
+SELECT COUNT(*) FROM orders WHERE amount > 1000;  -- 第二次读：6条
+-- 出现了"幻影"行
+```
+
+**4. 持久性（Durability）**
+
+事务提交后，对数据的修改永久保存，即使系统崩溃也不会丢失。
+
+```sql
+START TRANSACTION;
+
+INSERT INTO orders (user_id, amount) VALUES (123, 999);
+
+COMMIT;  -- 一旦提交，即使服务器立即崩溃，数据也不会丢失
+```
+
+**实战案例：秒杀场景**
+
+```sql
+-- 场景：商品秒杀，防止超卖
+START TRANSACTION;
+
+-- 1. 锁定库存行（for update）
+SELECT stock FROM products 
+WHERE product_id = 123 
+FOR UPDATE;
+
+-- 2. 检查库存
+IF stock > 0 THEN
+    -- 3. 扣减库存
+    UPDATE products 
+    SET stock = stock - 1 
+    WHERE product_id = 123;
+    
+    -- 4. 创建订单
+    INSERT INTO orders (user_id, product_id, amount) 
+    VALUES (456, 123, 99);
+    
+    COMMIT;
+ELSE
+    ROLLBACK;
+END IF;
+```
+
+**性能优化建议**：
+
+1. **事务尽可能短**：减少锁定时间
+2. **避免在事务中查询大量数据**
+3. **合理选择隔离级别**：根据业务需求权衡性能和一致性
+4. **使用乐观锁替代悲观锁**（适合读多写少场景）
+
+```sql
+-- 乐观锁示例（使用version字段）
+UPDATE products 
+SET stock = stock - 1, version = version + 1
+WHERE product_id = 123 
+AND version = 10;  -- 只有version匹配才更新
+
+-- 如果更新失败（affected rows = 0），说明有其他事务修改了数据
+```
+
+{{< /details >}}
+
+{{< details "**explain执行计划怎么看？如何分析SQL性能？**" "SQL" >}}
+
+`EXPLAIN`是分析SQL查询性能的重要工具，可以显示MySQL如何执行查询。
+
+**基本用法**：
+
+```sql
+EXPLAIN SELECT * FROM orders WHERE user_id = 123;
+```
+
+**重要字段详解**：
+
+| 字段 | 说明 | 重要性 |
+|------|------|--------|
+| type | 访问类型 | ⭐⭐⭐⭐⭐ |
+| key | 实际使用的索引 | ⭐⭐⭐⭐⭐ |
+| rows | 扫描的行数 | ⭐⭐⭐⭐⭐ |
+| Extra | 额外信息 | ⭐⭐⭐⭐⭐ |
+
+**type（访问类型）**
+
+性能从好到差：`system > const > eq_ref > ref > range > index > ALL`
+
+```sql
+-- const：最优，主键或唯一索引的常量查询
+EXPLAIN SELECT * FROM users WHERE user_id = 1;
+-- type: const
+
+-- ref：非唯一索引扫描
+EXPLAIN SELECT * FROM orders WHERE user_id = 123;
+-- type: ref
+
+-- range：范围扫描
+EXPLAIN SELECT * FROM orders 
+WHERE order_date BETWEEN '2024-01-01' AND '2024-12-31';
+-- type: range
+
+-- ALL：全表扫描（最差）
+EXPLAIN SELECT * FROM orders WHERE YEAR(order_date) = 2024;
+-- type: ALL（函数导致索引失效）
+```
+
+**Extra（额外信息）**
+
+**好的Extra**：
+- `Using index`：覆盖索引，不需要回表
+- `Using where`：使用WHERE过滤
+- `Using index condition`：索引下推
+
+**坏的Extra**：
+- `Using filesort`：需要额外排序
+- `Using temporary`：需要临时表
+- `Using join buffer`：JOIN时需要缓冲区
+
+**完整案例分析**：
+
+```sql
+-- 慢查询
+EXPLAIN SELECT 
+    u.name,
+    COUNT(o.order_id) as order_count,
+    SUM(o.amount) as total_amount
+FROM orders o
+JOIN users u ON o.user_id = u.user_id
+WHERE o.order_date >= '2024-01-01'
+AND u.city = 'Beijing'
+GROUP BY u.user_id
+ORDER BY total_amount DESC
+LIMIT 10;
+```
+
+**可能的执行计划问题**：
+```
+id  select_type  table  type   key      rows    Extra
+1   SIMPLE       o      ALL    NULL     100000  Using where; Using temporary; Using filesort
+1   SIMPLE       u      eq_ref PRIMARY  1       Using where
+```
+
+**问题分析**：
+1. `type: ALL` - orders表全表扫描
+2. `key: NULL` - 没有使用索引
+3. `rows: 100000` - 扫描10万行
+4. `Using temporary` - 使用临时表
+5. `Using filesort` - 需要排序
+
+**优化方案**：
+
+```sql
+-- 1. 在order_date建立索引
+CREATE INDEX idx_order_date ON orders(order_date);
+
+-- 2. 在user_id建立索引
+CREATE INDEX idx_user_id ON orders(user_id);
+
+-- 3. 在city建立索引
+CREATE INDEX idx_city ON users(city);
+
+-- 4. 创建复合索引
+CREATE INDEX idx_date_user ON orders(order_date, user_id);
+```
+
+**优化后的执行计划**：
+```
+id  select_type  table  type   key            rows   Extra
+1   SIMPLE       o      range  idx_date_user  5000   Using where; Using index
+1   SIMPLE       u      eq_ref PRIMARY        1      Using where
+```
+
+**改进**：
+1. `type: range` - 使用范围扫描
+2. `key: idx_date_user` - 使用了索引
+3. `rows: 5000` - 扫描行数减少95%
+4. 去除了`Using temporary`和`Using filesort`
+
+**性能分析检查清单**：
+
+✅ type 是否为 ALL 或 index（全表扫描）
+✅ key 是否为 NULL（未使用索引）
+✅ rows 是否过大
+✅ Extra 是否包含 Using filesort 或 Using temporary
+✅ 多表JOIN时，驱动表选择是否合理
+
+{{< /details >}}
+
+{{< details "**如何设计一个高效的数据库表结构？**" "数据库设计" >}}
+
+数据库表设计直接影响系统性能和可维护性。
+
+**设计原则**：
+
+**1. 三大范式**
+
+**第一范式（1NF）**：字段不可再分
+
+```sql
+-- 不符合1NF❌
+CREATE TABLE users (
+    address TEXT  -- "北京市朝阳区XXX街道"（混合了省、市、区）
+);
+
+-- 符合1NF✅
+CREATE TABLE users (
+    province VARCHAR(20),
+    city VARCHAR(20),
+    district VARCHAR(20),
+    street VARCHAR(100)
+);
+```
+
+**第二范式（2NF）**：消除部分依赖
+
+```sql
+-- 不符合2NF❌
+CREATE TABLE order_items (
+    order_id INT,
+    product_id INT,
+    product_name VARCHAR(50),    -- 只依赖product_id
+    quantity INT,
+    PRIMARY KEY (order_id, product_id)
+);
+
+-- 符合2NF✅
+CREATE TABLE order_items (
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    PRIMARY KEY (order_id, product_id)
+);
+
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(50)
+);
+```
+
+**第三范式（3NF）**：消除传递依赖
+
+```sql
+-- 不符合3NF❌
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY,
+    dept_id INT,
+    dept_name VARCHAR(50),     -- 依赖于dept_id
+    dept_location VARCHAR(100)  -- 依赖于dept_id
+);
+
+-- 符合3NF✅
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY,
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+
+CREATE TABLE departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50),
+    location VARCHAR(100)
+);
+```
+
+**2. 反范式化（性能优化）**
+
+在某些场景下，为了提高查询性能，可以适当违反范式。
+
+```sql
+-- 反范式化（冗余用户信息）
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    user_id INT,
+    user_name VARCHAR(50),      -- 冗余
+    shipping_address TEXT,       -- 冗余（快照）
+    order_amount DECIMAL(10,2)
+);
+```
+
+**优势**：
+- 减少JOIN，查询更快
+- 保存历史快照（地址可能变化）
+
+**劣势**：
+- 数据冗余
+- 更新复杂
+- 可能不一致
+
+**3. 数据类型选择**
+
+**原则**：选择最小的数据类型
+
+```sql
+CREATE TABLE optimized_users (
+    user_id INT UNSIGNED,           -- 4字节
+    age TINYINT UNSIGNED,           -- 1字节，0-255
+    username VARCHAR(50),           -- 变长
+    gender CHAR(1),                 -- 定长
+    status ENUM('active', 'inactive'),  -- 1字节
+    balance DECIMAL(10,2),          -- 精确，适合金额
+    created_at DATETIME,            -- 8字节
+    settings JSON                   -- 灵活的配置数据
+);
+```
+
+**4. 索引设计**
+
+```sql
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    order_date DATETIME NOT NULL,
+    amount DECIMAL(10,2),
+    status ENUM('pending','paid','shipped'),
+    
+    -- 索引
+    INDEX idx_user_id (user_id),
+    INDEX idx_date_status (order_date, status),
+    UNIQUE INDEX idx_order_no (order_no)
+);
+```
+
+**5. 实战案例：用户表设计**
+
+```sql
+CREATE TABLE users (
+    user_id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    status TINYINT UNSIGNED DEFAULT 1,
+    
+    -- 统计信息（冗余字段，提高查询性能）
+    login_count INT UNSIGNED DEFAULT 0,
+    order_count INT UNSIGNED DEFAULT 0,
+    
+    -- 时间戳
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at DATETIME COMMENT '软删除',
+    
+    -- 索引
+    UNIQUE INDEX idx_username (username),
+    UNIQUE INDEX idx_email (email),
+    INDEX idx_status (status),
+    INDEX idx_deleted (deleted_at)
+    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+```
+
+**最佳实践**：
+
+✅ 所有表必须有主键
+✅ 使用InnoDB引擎（支持事务）
+✅ 使用UTF8MB4字符集（支持emoji）
+✅ 重要字段添加NOT NULL和DEFAULT
+✅ 合理使用索引
+✅ 添加必要的注释
+✅ 考虑软删除而非物理删除
+✅ 预留扩展字段（JSON）
+
+{{< /details >}}
+
